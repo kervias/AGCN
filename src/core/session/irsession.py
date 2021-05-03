@@ -17,7 +17,7 @@ class IRSession(object):
 
     def train(self, dataloader, optimizer, user_attrs_input, item_attrs_input):
         sum_loss, sum_loss1, sum_loss2, sum_auc = 0.0, 0.0, 0.0, 0.0
-        for uij in tqdm(dataloader):
+        for uij in dataloader:
             u_list = uij[:, 0].type(torch.long).cuda()
             i_list = uij[:, 1].type(torch.long).cuda()
             j_list = uij[:, 2].type(torch.long).cuda()

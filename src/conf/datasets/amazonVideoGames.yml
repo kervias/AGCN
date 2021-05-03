@@ -1,10 +1,9 @@
 name: amazonVideoGames
-
-epoch_num: 300 # epoch times
-iter_num: 10 # iter times
 user_count: 31027
 item_count: 33899
 
+epoch_num: 300 # epoch times
+iter_num: 10 # iter times
 free_emb_dim: 32 # free embedding dim
 learning_rate: 0.0005 # learning rate
 batch_size: 5120
