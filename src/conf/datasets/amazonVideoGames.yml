@@ -6,8 +6,8 @@ user_count: 31027
 item_count: 33899
 
 free_emb_dim: 32 # free embedding dim
-learning_rate: 0.001 # learning rate
-batch_size: 10240
+learning_rate: 0.0005 # learning rate
+batch_size: 5120
 gamma: 0.001
 lambda1: 0.001
 lambda2: 0.001
