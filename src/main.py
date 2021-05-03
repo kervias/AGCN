@@ -5,6 +5,7 @@ import os
 import argparse
 import logging
 import shutil
+import traceback
 
 
 def get_args():
@@ -37,7 +38,7 @@ def init_all(cfg: UnionConfig):
         cfg.tmpout_folder_path = cfg.TMPOUT_FOLDER_PATH + "/IR/test/{}".format(cfg.ID)
         cfg.output_folder_path = cfg.OUTPUT_FOLDER_PATH + "/IR/test"
         cfg.train_folder_path = cfg.OUTPUT_FOLDER_PATH + "/IR/train/{}".format(cfg.train_id)
-        PathUtil.check_path_exist(cfg.train_folder_path+"/all_best_pth.npy")
+        PathUtil.check_path_exist(cfg.train_folder_path + "/all_best_pth.npy")
         PathUtil.auto_create_folder_path(
             cfg.tmpout_folder_path,
             cfg.output_folder_path
@@ -57,15 +58,7 @@ def init_all(cfg: UnionConfig):
     DecoratorTimer.logger = cfg.logger
 
 
-if __name__ == '__main__':
-    args = get_args()
-    config = UnionConfig.from_py_module(settings)  # get config from settings.py
-    config.model_cfg = UnionConfig.from_yml_file(
-        config.CONFIG_FOLDER_PATH + "/datasets/{}.yml".format(args.dataset_name)
-    )  # get config from {dataset_name}.yml
-    config.merge_asdict(args.__dict__)  # merge config from argparse
-    init_all(config)  # init config
-
+def main(config):
     config.logger.info("====" * 15)
     config.logger.info("[ID]: " + config.ID)
     config.logger.info("[DATASET]: " + config.dataset_name)
@@ -77,5 +70,19 @@ if __name__ == '__main__':
     entrypoint = EntryPoint(config)
     entrypoint.start()
     config.logger.info("Task Completed!")
-    logging.shutdown()
-    shutil.move(config.tmpout_folder_path, config.output_folder_path)
+
+
+if __name__ == '__main__':
+    args = get_args()
+    config = UnionConfig.from_py_module(settings)  # get config from settings.py
+    config.model_cfg = UnionConfig.from_yml_file(
+        config.CONFIG_FOLDER_PATH + "/datasets/{}.yml".format(args.dataset_name)
+    )  # get config from {dataset_name}.yml
+    config.merge_asdict(args.__dict__)  # merge config from argparse
+    init_all(config)  # init config
+    try:
+        main(config)
+        logging.shutdown()
+        shutil.move(config.tmpout_folder_path, config.output_folder_path)
+    except:
+        config.logger.error(traceback.format_exc())
