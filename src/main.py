@@ -19,10 +19,10 @@ def get_args():
 
 def init_all(cfg: UnionConfig):
     cfg.data_folder_path = cfg.DATA_FOLDER_PATH + "/{}".format(cfg.dataset_name)
-    cfg.TMPOUT_FOLDER_PATH = os.path.realpath(cfg.TMPOUT_FOLDER_PATH)
-    cfg.OUTPUT_FOLDER_PATH = os.path.realpath(cfg.OUTPUT_FOLDER_PATH)
     cfg.TMPOUT_FOLDER_PATH += "/{}".format(cfg.dataset_name)
     cfg.OUTPUT_FOLDER_PATH += "/{}".format(cfg.dataset_name)
+    cfg.TMPOUT_FOLDER_PATH = os.path.realpath(cfg.TMPOUT_FOLDER_PATH)
+    cfg.OUTPUT_FOLDER_PATH = os.path.realpath(cfg.OUTPUT_FOLDER_PATH)
     PathUtil.check_path_exist(cfg.data_folder_path)
 
     if cfg.task == 'IR' and cfg.istrain is True:
@@ -36,7 +36,8 @@ def init_all(cfg: UnionConfig):
         assert cfg.train_id is not None
         cfg.tmpout_folder_path = cfg.TMPOUT_FOLDER_PATH + "/IR/test/{}".format(cfg.ID)
         cfg.output_folder_path = cfg.OUTPUT_FOLDER_PATH + "/IR/test"
-        PathUtil.check_path_exist(cfg.OUTPUT_FOLDER_PATH + "/IR/train/{}/all_best_pth.npy".format(cfg.train_id))
+        cfg.train_folder_path = cfg.OUTPUT_FOLDER_PATH + "/IR/train/{}".format(cfg.train_id)
+        PathUtil.check_path_exist(cfg.train_folder_path+"/all_best_pth.npy")
         PathUtil.auto_create_folder_path(
             cfg.tmpout_folder_path,
             cfg.output_folder_path

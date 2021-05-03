@@ -2,7 +2,6 @@ import torch
 from torch.nn import Parameter
 import numpy as np
 from torch.nn import functional as F
-from utils.commonUtil import DecoratorTimer
 
 
 class AGCN(torch.nn.Module):
