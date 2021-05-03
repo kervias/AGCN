@@ -1,10 +1,10 @@
-from utils import UnionConfig
-from tqdm import tqdm
 from core.models.AGCN import AGCN
+from tqdm import tqdm
+from utils import UnionConfig
 import torch
 
 
-class IRSession(object):
+class AISession(object):
     def __init__(self, cfg: UnionConfig, model: AGCN):
         self.cfg = cfg
         self.model = model
