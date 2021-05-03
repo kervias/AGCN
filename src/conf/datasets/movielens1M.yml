@@ -1,0 +1,25 @@
+movielens1M:
+  name: movielens-1M
+  data_folder_path: ../data/movielens-1M
+
+  epoch_num: 300 # epoch times
+  iter_num: 20 # iter times
+  user_count: 5652 #6040
+  item_count: 3952
+
+  free_emb_dim: 32 # free embedding dim
+  learning_rate: 0.001 # learning rate
+  batch_size: 128
+  gamma: 0.001
+  lambda1: 0.001
+  lambda2: 0.001
+  attr_union_dim: 30 # attr_dim
+  gcn_layer: 2
+
+  user_attr:
+    have: true
+    attr_type_num: 3
+    attr_dim_list: [2, 7, 21]
+    attr_type_list: [0, 0, 0] # 0 means single-label attribute and 1 means multi-label attributes
+  item_attr:
+    have: false

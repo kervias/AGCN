@@ -1,0 +1,24 @@
+name: amazonVideoGames
+
+epoch_num: 300 # epoch times
+iter_num: 10 # iter times
+user_count: 31027
+item_count: 33899
+
+free_emb_dim: 32 # free embedding dim
+learning_rate: 0.001 # learning rate
+batch_size: 10240
+gamma: 0.001
+lambda1: 0.001
+lambda2: 0.001
+attr_union_dim: 32
+gcn_layer: 3
+neg_item_num: 5
+
+user_attr:
+  have: false
+item_attr:
+  have: true
+  attr_type_num: 3
+  attr_dim_list: [14, 52, 10]
+  attr_type_list: [ 1, 1, 0 ] # 0 means single-label attribute and 1 means multi-label attributes
