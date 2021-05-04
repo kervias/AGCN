@@ -62,6 +62,7 @@ class AGCN(torch.nn.Module):
 
         # 初始化二分图
         self.graph_adj_mat = kwargs['graph_adj_mat']
+
     # @DecoratorTimer()
     def forward(self, **kwargs):
         if self.user_attr_cfg.get('have', 'False') is True:
@@ -86,8 +87,8 @@ class AGCN(torch.nn.Module):
         # self.feature_layer_1 = torch.add(self.neighbor_layer_1, self.feature_layer_0)
         # self.neighbor_layer_2 = torch.sparse.mm(self.graph_adj_mat, self.feature_layer_1)
         # self.feature_layer_2 = torch.add(self.neighbor_layer_2, self.feature_layer_1)
-        #self.neighbor_layer_3 = torch.sparse.mm(self.graph_adj_mat, self.feature_layer_2)
-        #self.feature_layer_3 = torch.add(self.neighbor_layer_3, self.feature_layer_2)
+        # self.neighbor_layer_3 = torch.sparse.mm(self.graph_adj_mat, self.feature_layer_2)
+        # self.feature_layer_3 = torch.add(self.neighbor_layer_3, self.feature_layer_2)
         self.final_user_emb, self.final_item_emb = torch.split(self.feature_layer, [self.user_count, self.item_count],
                                                                0)
 
@@ -126,7 +127,7 @@ class AGCN(torch.nn.Module):
             slice_r = user_gt.shape[1]
         else:
             assert user_gt.shape[1] == slice_r - slice_l and slice_l < slice_r
-        user_infer = self.user_attr_inference(user_existing_index)[:,slice_l:slice_r]
+        user_infer = self.user_attr_inference(user_existing_index)[:, slice_l:slice_r]
         user_infer = - torch.log(torch.clip(torch.softmax(user_infer, 1), 1e-10, 1.0))
         return torch.mean(torch.sum(torch.mul(user_infer, user_gt), 1))
 
@@ -172,4 +173,3 @@ class AGCN(torch.nn.Module):
                 loss2 += self.item_attr_infer_loss(item_existing_index_list[i], gt_list, slice_l, slice_r)
 
         return loss1 + gamma * loss2, loss1, loss2
-

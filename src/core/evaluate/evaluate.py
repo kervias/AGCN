@@ -170,4 +170,3 @@ class Evaluate(object):
             dict_hr[topk] = round(sum(dict_hr_list[topk]) / user_emb.shape[0], 4)
             dict_ndcg[topk] = round(sum(dict_ndcg_list[topk]) / user_emb.shape[0], 4)
         return dict_hr, dict_ndcg
-

@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+@Author: kervias
+"""
+
 import logging
 import pytz
 
@@ -10,17 +15,21 @@ class LoggerUtil(object):
         if disableFile is False and logfile is None:
             raise Exception("Please give log filepath")
         self.logger = None
-        self._init_logger()
+        self.__init_logger()
 
-    def _init_logger(self):
+    def __init_logger(self):
         if self.logger is not None:
             return
-        logger = logging.getLogger(self.name)
-
-        logger.setLevel(logging.INFO)
-        formatter = logging.Formatter("%(asctime)s(%(name)s)[%(levelname)s]: %(message)s",
-                                      datefmt="%Y-%m-%d %H:%M:%S")
+        # define fomatter
+        formatter = logging.Formatter(
+            "%(asctime)s(%(name)s)[%(levelname)s]: %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+        )
         formatter.converter = self.converterCN
+
+        # define logger
+        logger = logging.getLogger(self.name)
+        logger.setLevel(logging.INFO)
+
         if self.disableFile is False:
             fh = logging.FileHandler(self.logfile, mode='a+', encoding='utf-8')
             fh.setFormatter(formatter)
