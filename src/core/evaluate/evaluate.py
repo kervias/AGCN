@@ -28,6 +28,8 @@ class Evaluate(object):
         hr_list = []
         ndcg_list = []
         for uid in uid_list:
+            if uid not in pos_predict:
+                continue
             pos_rating_list = pos_predict[uid]
             neg_rating_list = neg_predict[uid]
             target_len = min(top_k, len(pos_rating_list))
@@ -81,8 +83,10 @@ class Evaluate(object):
             # if Evaluate.is_cuda:
             #     ratings = ratings.cpu()
             for i in range(batch_user_count):
-                pos_predict[i] = ratings[i, dict_pos_data[start_ind + i]].detach().numpy().tolist()
-                neg_predict[i] = ratings[i, dict_neg_data[start_ind + i]].detach().numpy().tolist()
+                if (start_ind + i) not in dict_pos_data.keys():
+                    continue
+                pos_predict[i] = ratings[i, dict_pos_data[start_ind + i]].tolist() if len(dict_pos_data[start_ind + i]) > 0 else []
+                neg_predict[i] = ratings[i, dict_neg_data[start_ind + i]].tolist() if len(dict_neg_data[start_ind + i]) > 0 else []
             for topk in topk_list:
                 tmp_hr, tmp_ndcg = Evaluate.get_hr_ndcg(u_list, pos_predict, neg_predict, topk)
                 dict_hr_list[topk].append(tmp_hr * batch_user_count)

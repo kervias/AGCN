@@ -6,7 +6,7 @@ feedback_count: 225288
 epoch_num: 300 # epoch times
 iter_num: 20 # iter times
 free_emb_dim: 32 # free embedding dim
-learning_rate: 0.001 # learning rate
+learning_rate: 0.0005 # learning rate
 batch_size: 1280
 gamma: 0.001
 lambda1: 0.001

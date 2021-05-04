@@ -1,4 +1,4 @@
-# Graduate Design Project - AGCN
+# Graduation Design Project - AGCN
 > Multi-task Algorithm for item recommendation task(IR) and attribute inference task(AI)
 
 ## Install
@@ -55,3 +55,6 @@ item_attr:
   attr_dim_list: [14, 52, 10]
   attr_type_list: [ 1, 1, 0 ] # 0 means single-label attribute and 1 means multi-label attributes
 ```
+
+## Data format
+
