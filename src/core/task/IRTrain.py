@@ -17,12 +17,16 @@ class IR_Train(object):
 
     def __init__(self, cfg):
         self.cfg = cfg
+        self.model_cfg = self.cfg.yml_cfg['IR-Train']
+        self.yml_cfg = self.cfg.yml_cfg
+        self.item_attr_cfg = self.yml_cfg['item_attr']
+        self.user_attr_cfg = self.yml_cfg['user_attr']
+
         self.dataset_name = self.cfg.dataset_name
         self.tmpout_folder_path = self.cfg['tmpout_folder_path']
         self.logger = self.cfg.logger
-        self.model_cfg = self.cfg.model_cfg
-        self.item_attr_cfg = self.model_cfg['item_attr']
-        self.user_attr_cfg = self.model_cfg['user_attr']
+        self.user_count = self.yml_cfg['user_count']
+        self.item_count = self.yml_cfg['item_count']
 
     def train(self):
         # 1. 加载数据
@@ -55,12 +59,12 @@ class IR_Train(object):
             user_gt_list = loadutil.load_user_gt_list()
 
         graph_adjmat = LaplaceGraph(
-            n_users=self.cfg.model_cfg['user_count'],
-            n_items=self.cfg.model_cfg['item_count'],
+            n_users=self.user_count,
+            n_items=self.item_count,
             train_U2I=train_U2I
         ).generate(add_self_loop=False)
         # 2. 初始化 model
-        model = AGCN(settings=self.cfg)
+        model = AGCN(cfg=self.cfg, task='IR-Train')
         model.init_net_data(
             graph_adj_mat=graph_adjmat.cuda()
         )
@@ -74,7 +78,7 @@ class IR_Train(object):
 
         dataloader = DataLoader(
             TrainDataset(TrainDataset.gene_UI_from_U2I(train_U2I, num_neg_item=self.model_cfg['neg_item_num']),
-                         train_U2I, self.model_cfg['item_count']),
+                         train_U2I, self.item_count),
             batch_size, num_workers=4, shuffle=True
         )
         sess = IRSession(self.cfg, model)

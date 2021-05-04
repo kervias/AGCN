@@ -12,19 +12,21 @@ from utils import tensor2npy
 class IR_Test(object):
     def __init__(self, cfg):
         self.cfg = cfg
+        self.model_cfg = self.cfg.yml_cfg['IR-Test']
+        self.yml_cfg = self.cfg.yml_cfg
+        self.item_attr_cfg = self.yml_cfg['item_attr']
+        self.user_attr_cfg = self.yml_cfg['user_attr']
+
         self.dataset_name = self.cfg.dataset_name
         self.tmpout_folder_path = self.cfg['tmpout_folder_path']
         self.logger = self.cfg.logger
-        self.model_cfg = self.cfg.model_cfg
-        self.item_attr_cfg = self.model_cfg['item_attr']
-        self.user_attr_cfg = self.model_cfg['user_attr']
         self.train_folder_path = self.cfg.train_folder_path
+        self.user_count = self.yml_cfg['user_count']
+        self.item_count = self.yml_cfg['item_count']
 
     def test(self):
         # 1. 加载数据
         loadutil = LoadUtil(settings=self.cfg)
-        dict_test_data = loadutil.load_test_U2I()
-        complete_data = loadutil.load_total_U2I()
 
         item_attrs_missing = None
         item_attrs_missing_index_list = None
@@ -39,13 +41,13 @@ class IR_Test(object):
             user_attrs_missing_index_list = loadutil.load_user_attrs_missing_index()
 
         graph_adjmat = LaplaceGraph(
-            n_users=self.cfg.model_cfg['user_count'],
-            n_items=self.cfg.model_cfg['item_count'],
+            n_users=self.user_count,
+            n_items=self.item_count,
             train_U2I=loadutil.load_train_U2I()
         ).generate(add_self_loop=False, norm_type=2)
 
         # 2. 初始化 model
-        model = AGCN(settings=self.cfg)
+        model = AGCN(cfg=self.cfg, task='IR-Test')
         # model.to(self.device)
         model.init_net_data(
             graph_adj_mat=graph_adjmat
@@ -56,7 +58,7 @@ class IR_Test(object):
         user_attrs_input = torch.from_numpy(user_attrs_missing).cuda() if self.user_attr_cfg['have'] else None
 
         # 3.开始测试
-        all_best_pth = np.load(self.cfg['train_folder_path'] + "/all_best_pth.npy", allow_pickle=True).tolist()
+        all_best_pth = np.load(self.train_folder_path + "/all_best_pth.npy", allow_pickle=True).tolist()
         output_cont = []
         with torch.no_grad():
             for k, pth_file_name in enumerate(all_best_pth):
@@ -70,9 +72,9 @@ class IR_Test(object):
                 perf_info, all_perf = evaluate(
                     user_emb, item_emb,
                     loadutil.load_train_U2I(),
-                    loadutil.load_test_U2I(), args={'topks': self.cfg.model_cfg['test_topks'], 'cores': 4})
+                    loadutil.load_test_U2I(), args={'topks': self.model_cfg['test_topks'], 'cores': 4})
 
-                for i, topk in enumerate(self.cfg.model_cfg['test_topks']):
+                for i, topk in enumerate(self.model_cfg['test_topks']):
                     output_cont.append("[%d]@%d: (ndcg=%.4f) (hr=%.4f) (recall=%.4f)" % (
                         k, topk, perf_info[i * 3], perf_info[i * 3 + 1], perf_info[i * 3 + 2])
                     )

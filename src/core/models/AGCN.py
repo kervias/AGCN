@@ -5,20 +5,21 @@ from torch.nn import functional as F
 
 
 class AGCN(torch.nn.Module):
-    def __init__(self, settings):
+    def __init__(self, cfg, task):
         super(AGCN, self).__init__()
-        self.settings = settings
-        self.model_cfg = self.settings['model_cfg']
+        self.cfg = cfg
+        self.yml_cfg = self.cfg.yml_cfg
+        self.model_cfg = self.yml_cfg[task]
         self.init_net_params()
 
     def init_net_params(self):
         self.free_emb_dim = self.model_cfg['free_emb_dim']  # user embedding和item embedding的维度
-        self.user_count = self.model_cfg['user_count']
-        self.item_count = self.model_cfg['item_count']
-        self.user_attr_cfg = self.model_cfg['user_attr']
-        self.item_attr_cfg = self.model_cfg['item_attr']
+        self.user_count = self.yml_cfg['user_count']
+        self.item_count = self.yml_cfg['item_count']
+        self.user_attr_cfg = self.yml_cfg['user_attr']
+        self.item_attr_cfg = self.yml_cfg['item_attr']
         self.attr_union_dim = self.model_cfg['attr_union_dim']
-        self.gcn_layer = self.model_cfg.get('gcn_layer', 2)
+        self.gcn_layer = self.model_cfg['gcn_layer']
 
     def init_net_data(self, **kwargs):
         # 初始化user和item的free embedding
@@ -109,7 +110,7 @@ class AGCN(torch.nn.Module):
         return torch.sigmoid(infer)
 
     def item_attr_infer_loss(self, item_existing_index, item_gt, slice_l=None, slice_r=None):
-        assert item_gt.shape[1] in self.model_cfg['item_attr']['attr_dim_list']
+        assert item_gt.shape[1] in self.item_attr_cfg['attr_dim_list']
         if slice_l is None or slice_r is None:
             slice_l = 0
             slice_r = item_gt.shape[1]
@@ -121,7 +122,7 @@ class AGCN(torch.nn.Module):
         return torch.mean(torch.sum(torch.mul(item_infer, item_gt), 1))
 
     def user_attr_infer_loss(self, user_existing_index, user_gt, slice_l=None, slice_r=None):
-        assert user_gt.shape[1] in self.model_cfg['user_attr']['attr_dim_list']
+        assert user_gt.shape[1] in self.user_attr_cfg['attr_dim_list']
         if slice_l is None or slice_r is None:
             slice_l = 0
             slice_r = user_gt.shape[1]
