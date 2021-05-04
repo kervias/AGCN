@@ -8,6 +8,7 @@ from core.session.aisession import AISession
 from sklearn.metrics import average_precision_score, accuracy_score
 from torch.utils.data import DataLoader
 from core.data.dataset import TrainDataset
+from core.data.graph import LaplaceGraph
 from utils import tensor2npy
 
 
@@ -50,7 +51,13 @@ class AI(object):
             user_attrs_missing_index_list = loadutil.load_user_attrs_missing_index()
             user_gt_list = loadutil.load_user_gt_list()
 
-        graph_adjmat = loadutil.load_graph_adj_mat()
+        graph_adjmat = LaplaceGraph(
+            n_users=self.cfg.model_cfg['user_count'],
+            n_items=self.cfg.model_cfg['item_count'],
+            train_U2I=train_U2I
+        ).generate(add_self_loop=False, norm_type=2)
+
+        #loadutil.load_graph_adj_mat()
 
         # 2. 初始化 model
         model = AGCN(settings=self.cfg)

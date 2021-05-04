@@ -32,13 +32,18 @@ class LaplaceGraph(Graph):
     def __init__(self, n_users, n_items, train_U2I):
         super(LaplaceGraph, self).__init__(n_users, n_items, train_U2I)
 
-    def generate(self):
+    def generate(self, add_self_loop=False, norm_type=2):
         edge_index, edge_weight = self.to_edge()
         edge_index = torch.tensor(edge_index, dtype=torch.long)
         edge_weight = torch.tensor(edge_weight, dtype=torch.float32)
-        edge_index, edge_weight = self.add_self_loop(edge_index, edge_weight)
-        edge_index, edge_weight = self.norm(edge_index, edge_weight)
-
+        if add_self_loop:
+            edge_index, edge_weight = self.add_self_loop(edge_index, edge_weight)
+        if norm_type == 1:
+            edge_index, edge_weight = self.norm(edge_index, edge_weight)
+        elif norm_type == 2:
+            edge_index, edge_weight = self.norm2(edge_index, edge_weight)
+        else:
+            raise Exception("unknown norm type")
         return self.mat(edge_index, edge_weight)
 
     def add_self_loop(self, edge_index, edge_weight):
@@ -54,7 +59,6 @@ class LaplaceGraph(Graph):
 
     def norm(self, edge_index, edge_weight):
         """ D^{-1/2} * A * D^{-1/2}"""
-
         row, col = edge_index[0], edge_index[1]
         deg = torch.zeros(self.num_nodes, dtype=torch.float32)
         deg = deg.scatter_add(0, col, edge_weight)
@@ -62,6 +66,16 @@ class LaplaceGraph(Graph):
         deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float('inf'), 0)
         edge_weight = deg_inv_sqrt[row] * edge_weight * deg_inv_sqrt[col]
 
+        return edge_index, edge_weight
+
+    def norm2(self, edge_index, edge_weight):
+        """ D^{-1} * A"""
+        row, col = edge_index[0], edge_index[1]
+        deg = torch.zeros(self.num_nodes, dtype=torch.float32)
+        deg = deg.scatter_add(0, col, edge_weight)
+        deg_inv_sqrt = deg.pow(-1)
+        deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float('inf'), 0)
+        edge_weight = deg_inv_sqrt[row] * edge_weight
         return edge_index, edge_weight
 
     @property

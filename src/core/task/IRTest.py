@@ -1,6 +1,7 @@
 from core.models.AGCN import AGCN
 from core.data.loadUtil import LoadUtil
 from core.data.dataset import TrainDataset
+from core.data.graph import LaplaceGraph
 from core.evaluate.evaluate import Evaluate
 import torch
 from torch.utils.data import DataLoader
@@ -37,7 +38,11 @@ class IR_Test(object):
             user_attrs_missing = loadutil.load_user_attrs_missing()
             user_attrs_missing_index_list = loadutil.load_user_attrs_missing_index()
 
-        graph_adjmat = loadutil.load_graph_adj_mat()
+        graph_adjmat = LaplaceGraph(
+            n_users=self.cfg.model_cfg['user_count'],
+            n_items=self.cfg.model_cfg['item_count'],
+            train_U2I=loadutil.load_train_U2I()
+        ).generate(add_self_loop=False, norm_type=2)
 
         # 2. 初始化 model
         model = AGCN(settings=self.cfg)
