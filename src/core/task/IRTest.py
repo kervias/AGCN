@@ -1,12 +1,12 @@
 from core.models.AGCN import AGCN
 from core.data.loadUtil import LoadUtil
-from core.data.dataset import TrainDataset
 from core.data.graph import LaplaceGraph
 from core.evaluate.evaluate import Evaluate
+from core.evaluate.performance import evaluate
 import torch
-from torch.utils.data import DataLoader
 import numpy as np
 import json
+from utils import tensor2npy
 
 
 class IR_Test(object):
@@ -63,13 +63,28 @@ class IR_Test(object):
                 model.load_state_dict(torch.load(self.train_folder_path + "/pths/" + pth_file_name))
                 self.logger.info("loaded " + pth_file_name)
                 model(user_attrs_input=user_attrs_input, item_attrs_input=item_attrs_input)  # forward
-                dict_hr, dict_ndcg = Evaluate.get_hr_ndcg_for_test(
-                    model.final_user_emb, model.final_item_emb,
-                    dict_test_data, complete_data, [10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
 
-                for key in dict_hr:
-                    output_cont.append("[%d]@%d: (hr=%.4f) (ndcg=%.4f)" % (k, key, dict_hr[key], dict_ndcg[key]))
+                user_emb = tensor2npy(model.final_user_emb)
+                item_emb = tensor2npy(model.final_item_emb)
+                # test set
+                perf_info, all_perf = evaluate(
+                    user_emb, item_emb,
+                    loadutil.load_train_U2I(),
+                    loadutil.load_test_U2I(), args={'topks': self.cfg.model_cfg['test_topks']})
+
+                for i, topk in enumerate(self.cfg.model_cfg['test_topks']):
+                    output_cont.append("[%d]@%d: (ndcg=%.4f) (hr=%.4f) (recall=%.4f)" % (
+                        k, topk, perf_info[i * 3], perf_info[i * 3 + 1], perf_info[i * 3 + 2])
+                    )
                     self.logger.info(output_cont[-1])
+                np.save(self.tmpout_folder_path + "/all_metrics-{}.npy".format(k))
+                # dict_hr, dict_ndcg = Evaluate.get_hr_ndcg_for_test(
+                #     model.final_user_emb, model.final_item_emb,
+                #     dict_test_data, complete_data, [10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
+                #
+                # for key in dict_hr:
+                #     output_cont.append("[%d]@%d: (hr=%.4f) (ndcg=%.4f)" % (k, key, dict_hr[key], dict_ndcg[key]))
+                #     self.logger.info(output_cont[-1])
 
                 # 更新item推理属性
                 if self.item_attr_cfg['have'] is True:

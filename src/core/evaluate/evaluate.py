@@ -54,7 +54,7 @@ class Evaluate(object):
 
     @staticmethod
     @torch.no_grad()
-    def get_hr_ndcg_from_emb(user_emb: torch.Tensor, item_emb: torch.Tensor, dict_pos_data: dict,
+    def get_hr_ndcg_for_val(user_emb: np.ndarray, item_emb: np.ndarray, dict_pos_data: dict,
                              dict_neg_data: dict, topk_list: list):
         """
             根据正样本索引和负样本索引计算rating，排序后计算hr和ndcg
@@ -70,15 +70,16 @@ class Evaluate(object):
         batch_size = 10000
         user_count = user_emb.shape[0]
         batch_num = math.ceil(user_count / batch_size)
+
         for batch_ind in range(batch_num):
             start_ind = batch_ind * batch_size
             end_ind = min(start_ind + batch_size, user_count)
-            ratings = torch.mm(user_emb[start_ind:end_ind], item_emb.t())
+            ratings = np.matmul(user_emb[start_ind:end_ind], item_emb.T) #torch.mm(user_emb[start_ind:end_ind], item_emb.t())
             batch_user_count = ratings.shape[0]
             u_list = list(range(batch_user_count))
             pos_predict,neg_predict = dict(), dict()
-            if Evaluate.is_cuda:
-                ratings = ratings.cpu()
+            # if Evaluate.is_cuda:
+            #     ratings = ratings.cpu()
             for i in range(batch_user_count):
                 pos_predict[i] = ratings[i, dict_pos_data[start_ind + i]].detach().numpy().tolist()
                 neg_predict[i] = ratings[i, dict_neg_data[start_ind + i]].detach().numpy().tolist()

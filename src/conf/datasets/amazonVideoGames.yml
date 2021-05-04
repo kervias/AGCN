@@ -13,6 +13,7 @@ lambda2: 0.001
 attr_union_dim: 32
 gcn_layer: 3
 neg_item_num: 5
+test_topks: [5,10,15,20,25,30,35,40,45,50]
 
 user_attr:
   have: false

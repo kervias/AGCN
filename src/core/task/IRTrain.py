@@ -7,6 +7,7 @@ import torch
 from torch.utils.data import DataLoader
 import numpy as np
 from core.session.irsession import IRSession
+from utils import tensor2npy
 
 
 class IR_Train(object):
@@ -98,8 +99,9 @@ class IR_Train(object):
                     iter_ind, epoch_ind, mean_auc, mean_loss, mean_loss1, mean_loss2))
 
                 # 计算hr和ndcg，将验证集中的数据与负样本评分对照排序
-                dict_hr, dict_ndcg = Evaluate.get_hr_ndcg_from_emb(model.final_user_emb, model.final_item_emb,
-                                                                   dict_val_data, dict_neg_1000_data, [10])
+                dict_hr, dict_ndcg = Evaluate.get_hr_ndcg_for_val(
+                    tensor2npy(model.final_user_emb), tensor2npy(model.final_item_emb),
+                    dict_val_data, dict_neg_1000_data, [10])
                 hr, ndcg = dict_hr[10], dict_ndcg[10]
                 self.logger.info(
                     "[ITER=%03d|EPOCH=%03d]: (HR@10=%.4f) (NDCG@10=%.4f)" % (iter_ind, epoch_ind, hr, ndcg))
