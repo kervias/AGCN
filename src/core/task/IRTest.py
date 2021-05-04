@@ -70,7 +70,7 @@ class IR_Test(object):
                 perf_info, all_perf = evaluate(
                     user_emb, item_emb,
                     loadutil.load_train_U2I(),
-                    loadutil.load_test_U2I(), args={'topks': self.cfg.model_cfg['test_topks']})
+                    loadutil.load_test_U2I(), args={'topks': self.cfg.model_cfg['test_topks'], 'cores': 4})
 
                 for i, topk in enumerate(self.cfg.model_cfg['test_topks']):
                     output_cont.append("[%d]@%d: (ndcg=%.4f) (hr=%.4f) (recall=%.4f)" % (

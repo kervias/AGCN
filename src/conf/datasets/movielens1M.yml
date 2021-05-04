@@ -1,6 +1,7 @@
 name: movielens-1M
 user_count: 6040 # 5652
 item_count: 3952
+feedback_count: 225288
 
 epoch_num: 300 # epoch times
 iter_num: 20 # iter times
@@ -13,6 +14,7 @@ lambda2: 0.001
 attr_union_dim: 30 # attr_dim
 gcn_layer: 2
 neg_item_num: 5
+test_topks: [5,10,15,20,25,30,35,40,45,50]
 
 user_attr:
   have: true
