@@ -58,3 +58,37 @@ item_attr:
 
 ## Data format
 
+​	Take `movilens1M`dataset for example.
+
+> + $U$: user set
+> + $V$: item set
+>
+> + $uid$: user_id
+> + $iid$: item_id
+
+```
+# attribute info
+user_attr:
+  have: false
+item_attr:
+  have: true
+  attr_type_num: 3
+  attr_dim_list: [ 14, 52, 10 ]
+  attr_type_list: [ 1, 1, 0 ]
+```
+
+根据AmazonVideoGames属性信息，其没有user属性，有三种item属性，每个属性的标签数分别为14、52、10，前两个为多标签属性，后两个为单标签属性。
+
+| filename                 |                            format                            |     type     | description                      |
+| ------------------------ | :----------------------------------------------------------: | :----------: | -------------------------------- |
+| total_U2I.npy            |                    {uid: [iid, iid], ...}                    | dict\<list\> | total feedbacks                  |
+| train_U2I.npy            |                    {uid: [iid, iid], ...}                    | dict\<list\> | train feedbacks                  |
+| val_U2I.npy              |                    {uid: [iid, iid], ...}                    | dict\<list\> | val feedbacks                    |
+| test_U2I.npy             |                    {uid: [iid, iid], ...}                    | dict\<list\> | test feedbacks                   |
+| complete_user_attr       |                            ------                            |    ------    | complete user attributes matrix  |
+| missing_user_attr        |                            ------                            |    ------    | missing user attributes matrix   |
+| existing_user_attr_index |                            ------                            |    ------    | store user attribute infomation  |
+| complete_item_attr       |               \|U\| * sum(item_attr_dim_list)                |  np.ndarray  | complete item attributes matrix  |
+| missing_item_attr        |               \|U\| * sum(item_attr_dim_list)                |  np.ndarray  | missing item attributes matrix   |
+| existing_item_attr_index | {'attr_dim_list': attr_dim_list, 'existing_index_list':[list1, list2, list3]} |     dict     | store item  attribute infomation |
+

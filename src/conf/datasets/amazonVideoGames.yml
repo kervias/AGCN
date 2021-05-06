@@ -49,7 +49,7 @@ IR-Test:
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
 
 # baselines for item recommendation
-BPR_MF:
+BPR-MF:
   epoch_num: 300
 
 NGCF:

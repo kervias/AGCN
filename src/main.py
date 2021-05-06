@@ -12,7 +12,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     str2bool = lambda x: x == 'true'
     parser.add_argument('--dataset_name', type=str, default='amazonVideoGames', help='dataset name')
-    parser.add_argument('--task', type=str, default='IR', choices=['IR', 'AI', 'LP'], help='task_name: [IR, AI]')
+    parser.add_argument('--task', type=str, default='IR', choices=['IR', 'AI', 'LP'], help='task_name: [IR, AI, LP]')
     parser.add_argument('--istrain', type=str2bool, default=True, help='train or test: [true, false]')
     parser.add_argument("--train_id", type=str, default=None, help="item recommendation train task id")
     return parser.parse_args()
