@@ -67,7 +67,7 @@ class LP_Manager(object):
         if self.user_attr_cfg['have'] is True:
             self.logger.info("start handle user attribute...")
             trans_mat = self.get_transform_mat(self.get_similarity_mat(train_U2I, count=select_count),
-                                               count=self.item_count,
+                                               count=self.user_count,
                                                k=knn).cuda()
             attr_dim_list = self.user_attr_cfg['attr_dim_list']
             for i, dim_len in enumerate(attr_dim_list):
@@ -76,7 +76,7 @@ class LP_Manager(object):
                 slice_r = slice_l + attr_dim_list[i]
                 model = LP()
                 user_attr_input = torch.from_numpy(user_attrs_missing[:, slice_l:slice_r]).cuda()
-                user_attr_gt = user_gt_list[i][:, slice_l:slice_r].cuda()
+                user_attr_gt = user_gt_list[i].cuda()
                 self.logger.info("start train {}th user attribute".format(i))
                 best_metric = -np.inf
                 for epoch in range(epoch_num):
@@ -109,7 +109,7 @@ class LP_Manager(object):
                 slice_r = slice_l + attr_dim_list[i]
                 model = LP()
                 item_attr_input = torch.from_numpy(item_attrs_missing[:, slice_l:slice_r]).cuda()
-                item_attr_gt = item_gt_list[i][:, slice_l:slice_r].cuda()
+                item_attr_gt = item_gt_list[i].cuda()
                 self.logger.info("start train {}th item attribute".format(i))
                 best_metric = -np.inf
                 for epoch in range(epoch_num):
@@ -131,7 +131,6 @@ class LP_Manager(object):
 
         # ====================
         self.logger.info("训练完毕！")
-        item_max_metric_dict, user_max_metric_dict = dict(), dict()
         output_cont = []
         if self.item_attr_cfg['have'] is True:
             attr_dim_list = self.item_attr_cfg['attr_dim_list']
@@ -174,21 +173,26 @@ class LP_Manager(object):
         attr_pd = tensor2npy(attr_pd)
 
         metric_list = []
+        metric = None
         if attr_type == 0:  # single
+            non_count = 0
             for _id in range(count):
                 pd, gt = attr_pd[_id], attr_gt[_id]
                 if np.sum(gt) == 0:
+                    non_count += 1
                     continue
                 max_val_ind = np.argmax(gt)
                 if pd[max_val_ind] == np.max(pd):
                     metric_list.append(1)
+            metric = sum(metric_list) / (count - non_count) # acc
         else:  # multi
             for _id in range(count):
                 pd, gt = attr_pd[_id], attr_gt[_id]
                 if np.sum(gt) == 0:
                     continue
                 metric_list.append(average_precision_score(gt, pd))
-        return round(sum(metric_list) / len(metric_list), 6)
+            metric = sum(metric_list) / len(metric_list) # map
+        return round(metric, 6)
 
     def get_similarity_mat(self, _2_: dict, count: int = 1000) -> dict:
         """
@@ -201,7 +205,7 @@ class LP_Manager(object):
         """
         sim_mat = defaultdict(defaultdict)
         id_set = set(_2_.keys())
-        for id1 in tqdm(_2_.keys()):
+        for id1 in _2_.keys():
             id_list = random.sample(id_set, count)
             for id2 in id_list:
                 if id1 == id2:

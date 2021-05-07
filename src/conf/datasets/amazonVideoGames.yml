@@ -57,7 +57,7 @@ NGCF:
 
 # baselines for attribute inference
 LP:
-  epoch_num: 300
+  epoch_num: 50
   loss_threshold: 0.01
   select_count: 1000
   knn: 20

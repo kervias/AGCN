@@ -3,19 +3,6 @@ user_count: 6040 # 5652
 item_count: 3952
 feedback_count: 225288
 
-epoch_num: 300 # epoch times
-iter_num: 20 # iter times
-free_emb_dim: 32 # free embedding dim
-learning_rate: 0.0005 # learning rate
-batch_size: 1280
-gamma: 0.001
-lambda1: 0.001
-lambda2: 0.001
-attr_union_dim: 30 # attr_dim
-gcn_layer: 2
-neg_item_num: 5
-test_topks: [5,10,15,20,25,30,35,40,45,50]
-
 user_attr:
   have: true
   attr_type_num: 3
@@ -23,3 +10,49 @@ user_attr:
   attr_type_list: [0, 0, 0] # 0 means single-label attribute and 1 means multi-label attributes
 item_attr:
   have: false
+
+AI:
+  epoch_num: 300 # epoch times
+  iter_num: 20 # iter times
+  free_emb_dim: 32 # free embedding dim
+  learning_rate: 0.0005 # learning rate
+  batch_size: 1280
+  gamma: 0.001
+  lambda1: 0.001
+  lambda2: 0.001
+  attr_union_dim: 30 # attr_dim
+  gcn_layer: 2
+  neg_item_num: 5
+
+IR-Train:
+  epoch_num: 300 # epoch times
+  iter_num: 20 # iter times
+  free_emb_dim: 32 # free embedding dim
+  learning_rate: 0.0005 # learning rate
+  batch_size: 1280
+  gamma: 0.001
+  lambda1: 0.001
+  lambda2: 0.001
+  attr_union_dim: 30 # attr_dim
+  gcn_layer: 2
+  neg_item_num: 5
+
+IR-Test:
+  epoch_num: 300 # epoch times
+  free_emb_dim: 32 # free embedding dim
+  gamma: 0.001
+  lambda1: 0.001
+  lambda2: 0.001
+  attr_union_dim: 30 # attr_dim
+  gcn_layer: 2
+  neg_item_num: 5
+  test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
+
+LP:
+  epoch_num: 50
+  loss_threshold: 0.01
+  select_count: 1000
+  knn: 20
+
+Semi-GCN:
+  epoch_num: 300
