@@ -58,7 +58,9 @@ NGCF:
 # baselines for attribute inference
 LP:
   epoch_num: 300
-  loss_threshold_for_save_pth: 1.0
+  loss_threshold: 0.01
+  select_count: 1000
+  knn: 20
 
 Semi-GCN:
   epoch_num: 300
