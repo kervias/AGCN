@@ -1,9 +1,9 @@
 import torch
-from core.models.NGCF import NGCF
+from core.models.BPRMF import BPRMF
 
 
-class NGCF_Session(object):
-    def __init__(self, model: NGCF):
+class BPRMF_Session(object):
+    def __init__(self, model: BPRMF):
         self.model = model
 
     def auc(self, user_emb, pos_emb, neg_emb):

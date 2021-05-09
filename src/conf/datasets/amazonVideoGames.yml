@@ -64,9 +64,6 @@ Semi-GCN:
   learning_rate: 0.05
 
 # baselines for item recommendation
-BPR-MF:
-  epoch_num: 300
-
 NGCF:
   emb_size: 32 # free embedding dim
   learning_rate: 0.005 # learning rate
@@ -79,3 +76,12 @@ NGCF:
   mess_dropout: [ 0.1, 0.1, 0.1 ]
   neg_item_num: 5
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
+
+BPRMF:
+  epoch_num: 250 # epoch times
+  learning_rate: 0.005 # learning rate
+  free_emb_dim: 32
+  batch_size: 2048
+  decay: 0.0001
+  test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
+  neg_item_num: 5
