@@ -50,7 +50,7 @@ class NGCF_Manager(object):
 
         for epoch in range(epoch_num):
             loss = sess.train(dataloader, optimizer)
-            self.logger.info("[epoch:{:03d}]: loss:[{:.6f}] = mf:[{:.6f}] + reg:[{:.6f}]".format(epoch + 1, *loss))
+            self.logger.info("[epoch:{:03d}]: loss:[{:.6f}] = mf:[{:.6f}] + reg:[{:.6f}]".format(epoch, *loss))
             model.eval()
             with torch.no_grad():
                 user_emb, item_emb = model.propagate()
@@ -67,4 +67,4 @@ class NGCF_Manager(object):
                     output_cont.append("[epoch=%03d]@%d: (ndcg=%.4f) (hr=%.4f) (recall=%.4f)" % (
                         epoch, topk, perf_info[i * 3], perf_info[i * 3 + 1], perf_info[i * 3 + 2]))
                     self.logger.info(output_cont[-1])
-                np.save(self.tmpout_folder_path + "/all_metrics-{}.npy".format(epoch))
+                np.save(self.tmpout_folder_path + "/all_metric/all_metrics-{}.npy".format(epoch), all_perf)

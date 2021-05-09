@@ -78,4 +78,4 @@ NGCF:
   node_dropout: 0.1
   mess_dropout: [ 0.1, 0.1, 0.1 ]
   neg_item_num: 5
-  test_topks: [ 10, 20, 30, 40, 50 ]
+  test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]

@@ -42,14 +42,21 @@ def init_all(cfg: UnionConfig):
         cfg.train_folder_path = cfg.OUTPUT_FOLDER_PATH + "/IR/train/{}".format(cfg.train_id)
         PathUtil.check_path_exist(cfg.train_folder_path + "/all_best_pth.npy")
         PathUtil.auto_create_folder_path(
-            cfg.tmpout_folder_path,
+            cfg.tmpout_folder_path + "/all_metric",
             cfg.output_folder_path
         )
-    elif cfg.task in ['AI', 'LP', 'Semi-GCN', 'NGCF']:
+    elif cfg.task in ['AI', 'LP', 'Semi-GCN']:
         cfg.tmpout_folder_path = cfg.TMPOUT_FOLDER_PATH + "/{}/{}".format(cfg.task, cfg.ID)
         cfg.output_folder_path = cfg.OUTPUT_FOLDER_PATH + "/{}".format(cfg.task)
         PathUtil.auto_create_folder_path(
             cfg.tmpout_folder_path,
+            cfg.output_folder_path
+        )
+    elif cfg.tak in ['NGCF']:
+        cfg.tmpout_folder_path = cfg.TMPOUT_FOLDER_PATH + "/{}/{}".format(cfg.task, cfg.ID)
+        cfg.output_folder_path = cfg.OUTPUT_FOLDER_PATH + "/{}".format(cfg.task)
+        PathUtil.auto_create_folder_path(
+            cfg.tmpout_folder_path + "/all_metric",
             cfg.output_folder_path
         )
     else:

@@ -79,7 +79,7 @@ class IR_Test(object):
                         k, topk, perf_info[i * 3], perf_info[i * 3 + 1], perf_info[i * 3 + 2])
                     )
                     self.logger.info(output_cont[-1])
-                np.save(self.tmpout_folder_path + "/all_metrics-{}.npy".format(k))
+                np.save(self.tmpout_folder_path + "/all_metric/all_metrics-{}.npy".format(k), all_perf)
                 # dict_hr, dict_ndcg = Evaluate.get_hr_ndcg_for_test(
                 #     model.final_user_emb, model.final_item_emb,
                 #     dict_test_data, complete_data, [10, 20, 30, 40, 50, 60, 70, 80, 90, 100])
