@@ -63,4 +63,8 @@ LP:
   knn: 20
 
 Semi-GCN:
-  epoch_num: 300
+  epoch_num: 50
+  gcn_layer: 3
+  attr_union_dim: 32
+  layer_dim_list: [32, 32, 32, 32]
+  learning_rate: 0.1

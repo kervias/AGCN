@@ -26,7 +26,7 @@ class IR_Test(object):
 
     def test(self):
         # 1. 加载数据
-        loadutil = LoadUtil(settings=self.cfg)
+        loadutil = LoadUtil(cfg=self.cfg)
 
         item_attrs_missing = None
         item_attrs_missing_index_list = None

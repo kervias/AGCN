@@ -28,7 +28,7 @@ class AI(object):
 
     def start(self):
         # 1. 加载数据
-        loadutil = LoadUtil(settings=self.cfg)
+        loadutil = LoadUtil(cfg=self.cfg)
         train_U2I = loadutil.load_train_U2I()
         
         item_attrs_complete = None

@@ -30,7 +30,7 @@ class IR_Train(object):
 
     def train(self):
         # 1. 加载数据
-        loadutil = LoadUtil(settings=self.cfg)
+        loadutil = LoadUtil(cfg=self.cfg)
         train_U2I = loadutil.load_train_U2I()
         dict_val_data = loadutil.load_val_U2I()
         dict_neg_1000_data = loadutil.get_neg_samples(force_regenerate=False, neg_sample_num=1000)
