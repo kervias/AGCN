@@ -32,7 +32,7 @@ class LaplaceGraph(Graph):
     def __init__(self, n_users, n_items, train_U2I):
         super(LaplaceGraph, self).__init__(n_users, n_items, train_U2I)
 
-    def generate(self, add_self_loop=False, norm_type=2):
+    def generate(self, add_self_loop=False, norm_type=2) -> torch.sparse_coo:
         edge_index, edge_weight = self.to_edge()
         edge_index = torch.tensor(edge_index, dtype=torch.long)
         edge_weight = torch.tensor(edge_weight, dtype=torch.float32)

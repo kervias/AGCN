@@ -220,3 +220,14 @@ class LoadUtil(object):
         if to_list is True:
             I2U = {k: type(v) for k, v in I2U.items()}
         return I2U
+
+    @staticmethod
+    def merge_U2I_dict(U2I_1, U2I_2, user_count):
+        U2I = dict()
+        for uid in range(user_count):
+            t1 = U2I_1[uid] if uid in U2I_1.keys() else []
+            t2 = U2I_2[uid] if uid in U2I_2.keys() else []
+            if len(t1) + len(t2) == 0:
+                continue
+            U2I[uid] = list(set(t1 + t2))
+        return U2I

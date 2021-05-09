@@ -13,8 +13,8 @@ def get_args():
     str2bool = lambda x: x == 'true'
     parser.add_argument('--dataset_name', type=str, default='amazonVideoGames', help='dataset name')
     parser.add_argument('--task', type=str, default='IR',
-                        choices=['IR', 'AI', 'LP', 'Semi-GCN'],
-                        help='task_name: [IR, AI, LP, Semi-GCN]')
+                        choices=['IR', 'AI', 'LP', 'Semi-GCN', 'NGCF'],
+                        help='task_name: [IR, AI, LP, Semi-GCN, NGCF]')
     parser.add_argument('--istrain', type=str2bool, default=True, help='train or test: [true, false]')
     parser.add_argument("--train_id", type=str, default=None, help="item recommendation train task id")
     return parser.parse_args()
@@ -45,7 +45,7 @@ def init_all(cfg: UnionConfig):
             cfg.tmpout_folder_path,
             cfg.output_folder_path
         )
-    elif cfg.task in ['AI', 'LP', 'Semi-GCN']:
+    elif cfg.task in ['AI', 'LP', 'Semi-GCN', 'NGCF']:
         cfg.tmpout_folder_path = cfg.TMPOUT_FOLDER_PATH + "/{}/{}".format(cfg.task, cfg.ID)
         cfg.output_folder_path = cfg.OUTPUT_FOLDER_PATH + "/{}".format(cfg.task)
         PathUtil.auto_create_folder_path(

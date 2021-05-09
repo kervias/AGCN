@@ -60,3 +60,16 @@ Semi-GCN:
   attr_union_dim: 30
   layer_dim_list: [30, 30, 30, 30]
   learning_rate: 0.1
+
+NGCF:
+  emb_size: 32 # free embedding dim
+  learning_rate: 0.005 # learning rate
+  batch_size: 2048
+  gcn_layer_num: 3
+  epoch_num: 250 # epoch times
+  layers: [ 32, 32, 32, 32]
+  decay: 0.0001
+  node_dropout: 0.1
+  mess_dropout: [ 0.1, 0.1, 0.1 ]
+  neg_item_num: 5
+  test_topks: [ 10, 20, 30, 40, 50 ]

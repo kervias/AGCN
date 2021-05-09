@@ -2,6 +2,7 @@ from core.task.IRTrain import IR_Train
 from core.task.IRTest import IR_Test
 from core.task.AI import AI
 from core.task.LP import LP_Manager
+from core.task.NGCF import NGCF_Manager
 from core.task.SemiGCN import SemiGCN_Manager
 
 
@@ -24,6 +25,9 @@ class EntryPoint(object):
             task.start()
         elif self.cfg.task == 'Semi-GCN':
             task = SemiGCN_Manager(self.cfg)
+            task.start()
+        elif self.cfg.task == 'NGCF':
+            task = NGCF_Manager(self.cfg)
             task.start()
         else:
             raise Exception("unknown task")
