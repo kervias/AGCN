@@ -15,6 +15,7 @@ pip install -r requirements.txt
 | IR       | AGCN model for item recommendation         | item recommendation |
 | AI       | AGCN model for  attribute inference        | attribute inference |
 | BPRMF    | BPR_MF model for item recommendation       | item recommendation |
+| FM       | FM model for item recommendation           | item recommendation |
 | NGCF     | NGCF model for item recommendation         | item recommendation |
 | LP       | Label Propagation for  attribute inference | attribute inference |
 | Semi-GCN | Semi-GCN model for attribute inference     | attribute inference |
@@ -43,6 +44,12 @@ python -u main.py --task AI --dataset_name movielens1M
 python -u main.py --task BPRMF --dataset_name movielens1M
 ```
 
+### 3. FM
+
+```bash
+python -u main.py --task FM --dataset_name movielens1M
+```
+
 ### 3. NGCF
 
 ```bash
@@ -52,13 +59,13 @@ python -u main.py --task NGCF --dataset_name movielens1M
 ### 4. LP
 
 ```bash
-python -u main.py --task BPRMF --dataset_name movielens1M
+python -u main.py --task LP --dataset_name movielens1M
 ```
 
 ### 5. Semi-GCN
 
 ```bash
-python -u main.py --task BPRMF --dataset_name movielens1M
+python -u main.py --task Semi-GCN --dataset_name movielens1M
 ```
 
 ## Parameters Settings
@@ -150,6 +157,19 @@ BPRMF:
   decay: 0.0001
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
   neg_item_num: 5
+  
+FM:
+  epoch_num: 300 # epoch times
+  free_emb_dim: 32 # free embedding dim
+  learning_rate: 0.0005 # learning rate
+  batch_size: 2048
+  gamma: 0.001
+  lambda1: 0.001
+  lambda2: 0.001
+  attr_union_dim: 32 # attr_dim
+  gcn_layer: 2
+  neg_item_num: 5
+  test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
 ```
 
 ## Data format

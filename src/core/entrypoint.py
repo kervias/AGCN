@@ -5,6 +5,8 @@ from core.task.LP import LP_Manager
 from core.task.NGCF import NGCF_Manager
 from core.task.SemiGCN import SemiGCN_Manager
 from core.task.BPRMF import BPRMF_Manager
+from core.task.FM import FM_Manager
+
 
 class EntryPoint(object):
     def __init__(self, cfg):
@@ -31,6 +33,9 @@ class EntryPoint(object):
             task.start()
         elif self.cfg.task == 'BPRMF':
             task = BPRMF_Manager(self.cfg)
+            task.start()
+        elif self.cfg.task == 'FM':
+            task = FM_Manager(self.cfg)
             task.start()
         else:
             raise Exception("unknown task")
