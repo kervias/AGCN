@@ -2,18 +2,7 @@ name: movielens-20M
 user_count: 138493
 item_count: 27278
 
-epoch_num: 100 # epoch times
-iter_num: 10 # iter times
-free_emb_dim: 32 # free embedding dim
-learning_rate: 0.001 # learning rate
-batch_size: 153600
-gamma: 0.001
-lambda1: 0.01
-lambda2: 0.001
-attr_union_dim: 20
-gcn_layer: 2
-neg_item_num: 5
-test_topks: [5,10,15,20,25,30,35,40,45,50]
+
 
 user_attr:
   have: false
@@ -23,7 +12,45 @@ item_attr:
   attr_dim_list: [20]
   attr_type_list: [1] # 0 means single-label attribute and 1 means multi-label attributes
 
+# AGCN
+AI:
+  epoch_num: 100 # epoch times
+  free_emb_dim: 32 # free embedding dim
+  learning_rate: 0.001 # learning rate
+  batch_size: 153600
+  gamma: 0.001
+  lambda1: 0.01
+  lambda2: 0.001
+  attr_union_dim: 20
+  gcn_layer: 2
+  neg_item_num: 5
 
+IR-Train:
+  epoch_num: 100 # epoch times
+  iter_num: 10 # iter times
+  free_emb_dim: 32 # free embedding dim
+  learning_rate: 0.001 # learning rate
+  batch_size: 153600
+  gamma: 0.001
+  lambda1: 0.01
+  lambda2: 0.001
+  attr_union_dim: 20
+  gcn_layer: 2
+  neg_item_num: 5
+
+IR-Test:
+  epoch_num: 100 # epoch times
+  free_emb_dim: 32 # free embedding dim
+  gamma: 0.001
+  lambda1: 0.01
+  lambda2: 0.001
+  attr_union_dim: 20
+  gcn_layer: 2
+  neg_item_num: 5
+  test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
+
+
+# baselines for attribute inference
 LP:
   epoch_num: 50
   loss_threshold: 0.01
@@ -36,3 +63,39 @@ Semi-GCN:
   attr_union_dim: 20
   layer_dim_list: [20, 20, 20, 20]
   learning_rate: 0.05
+
+# baselines for item recommendation
+NGCF:
+  epoch_num: 250 # epoch times
+  emb_size: 32 # free embedding dim
+  learning_rate: 0.001 # learning rate
+  batch_size: 153600
+  gcn_layer_num: 2
+  layers: [ 32, 32, 32]
+  decay: 0.0001
+  node_dropout: 0.1
+  mess_dropout: [ 0.1, 0.1, 0.1 ]
+  neg_item_num: 5
+  test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
+
+BPRMF:
+  epoch_num: 250 # epoch times
+  learning_rate: 0.001 # learning rate
+  free_emb_dim: 32
+  batch_size: 153600
+  decay: 0.0001
+  test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
+  neg_item_num: 5
+
+FM:
+  epoch_num: 300 # epoch times
+  free_emb_dim: 32 # free embedding dim
+  learning_rate: 0.001 # learning rate
+  batch_size: 153600
+  gamma: 0.001
+  lambda1: 0.001
+  lambda2: 0.001
+  attr_union_dim: 20 # attr_dim
+  gcn_layer: 2
+  neg_item_num: 5
+  test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]

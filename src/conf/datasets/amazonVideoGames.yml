@@ -11,10 +11,9 @@ item_attr:
   attr_dim_list: [ 14, 52, 10 ]
   attr_type_list: [ 1, 1, 0 ] # 0 means single-label attribute and 1 means multi-label attributes
 
-# model settings
+# AGCN
 AI:
   epoch_num: 300 # epoch times
-  iter_num: 10 # iter times
   free_emb_dim: 32 # free embedding dim
   learning_rate: 0.0005 # learning rate
   batch_size: 5120
