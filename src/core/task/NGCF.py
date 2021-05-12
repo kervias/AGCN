@@ -8,7 +8,8 @@ import numpy as np
 from torch.utils.data import DataLoader
 from utils import UnionConfig, tensor2npy
 from core.evaluate.performance import evaluate
-
+from collections import defaultdict
+import json
 
 class NGCF_Manager(object):
     def __init__(self, cfg):
@@ -48,6 +49,10 @@ class NGCF_Manager(object):
         optimizer = torch.optim.Adam(model.parameters(), lr=self.model_cfg['learning_rate'])
         sess = NGCF_Session(model)
 
+        epoch_metric_dict = defaultdict(lambda: defaultdict(dict))
+        best_ndcg = -np.inf
+        best_output = []
+
         for epoch in range(epoch_num):
             loss = sess.train(dataloader, optimizer)
             self.logger.info("[epoch:{:03d}]: loss:[{:.6f}] = mf:[{:.6f}] + reg:[{:.6f}]".format(epoch, *loss))
@@ -64,7 +69,24 @@ class NGCF_Manager(object):
                     }))
                 output_cont = []
                 for i, topk in enumerate(self.model_cfg['test_topks']):
+                    epoch_metric_dict[epoch][topk] = {
+                        'ndcg': float(perf_info[i * 3]),
+                        'hr': float(perf_info[i * 3 + 1]),
+                        'recall': float(perf_info[i * 3 + 2])
+                    }
                     output_cont.append("[epoch=%03d]@%d: (ndcg=%.4f) (hr=%.4f) (recall=%.4f)" % (
                         epoch, topk, perf_info[i * 3], perf_info[i * 3 + 1], perf_info[i * 3 + 2]))
                     self.logger.info(output_cont[-1])
+                if best_ndcg < epoch_metric_dict[epoch][10]['ndcg']:
+                    best_ndcg = epoch_metric_dict[epoch][10]['ndcg']
+                    best_output = output_cont
+
                 np.save(self.tmpout_folder_path + "/all_metric/all_metrics-{}.npy".format(epoch), all_perf)
+
+        self.logger.info("Train and Test complete! The best metric of epochs: \n" + '\n'.join(best_output))
+        with open(self.tmpout_folder_path + "/results.json", 'w', encoding='utf-8') as f:
+            data = {
+                "best_info": best_output,
+                "epoch_record": epoch_metric_dict
+            }
+            json.dump(data, f, indent=4, ensure_ascii=False)

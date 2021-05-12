@@ -11,6 +11,7 @@ from utils import UnionConfig
 import torch
 import numpy as np
 from core.models.FM import FM
+from collections import defaultdict
 
 
 class FM_Manager(object):
@@ -82,6 +83,9 @@ class FM_Manager(object):
             item_attrs_input=item_attrs_input
         )
 
+        epoch_metric_dict = defaultdict(lambda: defaultdict(dict))
+        best_ndcg = -np.inf
+        best_output = []
         for epoch in range(epoch_num):
             mean_loss, mean_loss1, mean_loss2, mean_auc = sess.train(dataloader, optimizer)
             self.logger.info("[EPOCH=%03d]: (auc=%.4f) (loss=%.4f) (loss1=%.4f) (loss2=%.4f)" % (
@@ -99,7 +103,24 @@ class FM_Manager(object):
                     }))
                 output_cont = []
                 for i, topk in enumerate(self.model_cfg['test_topks']):
+                    epoch_metric_dict[epoch][topk] = {
+                        'ndcg': float(perf_info[i * 3]),
+                        'hr': float(perf_info[i * 3 + 1]),
+                        'recall': float(perf_info[i * 3 + 2])
+                    }
                     output_cont.append("[epoch=%03d]@%d: (ndcg=%.4f) (hr=%.4f) (recall=%.4f)" % (
                         epoch, topk, perf_info[i * 3], perf_info[i * 3 + 1], perf_info[i * 3 + 2]))
                     self.logger.info(output_cont[-1])
+
+                    if best_ndcg < epoch_metric_dict[epoch][10]['ndcg']:
+                        best_ndcg = epoch_metric_dict[epoch][10]['ndcg']
+                        best_output = output_cont
                 np.save(self.tmpout_folder_path + "/all_metric/all_metrics-{}.npy".format(epoch), all_perf)
+
+        self.logger.info("Train and Test complete! The best metric of epochs: \n" + '\n'.join(best_output))
+        with open(self.tmpout_folder_path + "/results.json", 'w', encoding='utf-8') as f:
+            data = {
+                "best_info": best_output,
+                "epoch_record": epoch_metric_dict
+            }
+            json.dump(data, f, indent=4, ensure_ascii=False)

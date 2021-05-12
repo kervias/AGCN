@@ -84,10 +84,10 @@ def main(config):
 if __name__ == '__main__':
     args = get_args()
     config = UnionConfig.from_py_module(settings)  # get config from settings.py
+    config.merge_asdict(args.__dict__)  # merge config from argparse
     config.yml_cfg = UnionConfig.from_yml_file(
         config.CONFIG_FOLDER_PATH + "/datasets/{}.yml".format(args.dataset_name)
     )  # get config from {dataset_name}.yml
-    config.merge_asdict(args.__dict__)  # merge config from argparse
     init_all(config)  # init config
     try:
         main(config)

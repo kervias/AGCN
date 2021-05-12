@@ -64,11 +64,11 @@ Semi-GCN:
 
 # baselines for item recommendation
 NGCF:
+  epoch_num: 250 # epoch times
   emb_size: 32 # free embedding dim
-  learning_rate: 0.005 # learning rate
+  learning_rate: 0.0005 # learning rate
   batch_size: 2048
   gcn_layer_num: 3
-  epoch_num: 250 # epoch times
   layers: [ 32, 32, 32, 32]
   decay: 0.0001
   node_dropout: 0.1
@@ -78,7 +78,7 @@ NGCF:
 
 BPRMF:
   epoch_num: 250 # epoch times
-  learning_rate: 0.005 # learning rate
+  learning_rate: 0.0005 # learning rate
   free_emb_dim: 32
   batch_size: 2048
   decay: 0.0001

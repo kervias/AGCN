@@ -68,7 +68,7 @@ Semi-GCN:
 NGCF:
   epoch_num: 250 # epoch times
   emb_size: 32 # free embedding dim
-  learning_rate: 0.005 # learning rate
+  learning_rate: 0.0005 # learning rate
   batch_size: 2048
   gcn_layer_num: 3
   layers: [ 32, 32, 32, 32]
@@ -80,7 +80,7 @@ NGCF:
 
 BPRMF:
   epoch_num: 250 # epoch times
-  learning_rate: 0.005 # learning rate
+  learning_rate: 0.0005 # learning rate
   free_emb_dim: 32
   batch_size: 2048
   decay: 0.0001
@@ -88,7 +88,7 @@ BPRMF:
   neg_item_num: 5
 
 FM:
-  epoch_num: 300 # epoch times
+  epoch_num: 250 # epoch times
   free_emb_dim: 32 # free embedding dim
   learning_rate: 0.0005 # learning rate
   batch_size: 1280

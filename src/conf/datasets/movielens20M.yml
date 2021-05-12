@@ -2,8 +2,6 @@ name: movielens-20M
 user_count: 138493
 item_count: 27278
 
-
-
 user_attr:
   have: false
 item_attr:
@@ -49,7 +47,6 @@ IR-Test:
   neg_item_num: 5
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
 
-
 # baselines for attribute inference
 LP:
   epoch_num: 50
@@ -68,7 +65,7 @@ Semi-GCN:
 NGCF:
   epoch_num: 250 # epoch times
   emb_size: 32 # free embedding dim
-  learning_rate: 0.001 # learning rate
+  learning_rate: 0.0005 # learning rate
   batch_size: 153600
   gcn_layer_num: 2
   layers: [ 32, 32, 32]
@@ -80,7 +77,7 @@ NGCF:
 
 BPRMF:
   epoch_num: 250 # epoch times
-  learning_rate: 0.001 # learning rate
+  learning_rate: 0.0005 # learning rate
   free_emb_dim: 32
   batch_size: 153600
   decay: 0.0001
@@ -90,7 +87,7 @@ BPRMF:
 FM:
   epoch_num: 300 # epoch times
   free_emb_dim: 32 # free embedding dim
-  learning_rate: 0.001 # learning rate
+  learning_rate: 0.0005 # learning rate
   batch_size: 153600
   gamma: 0.001
   lambda1: 0.001
