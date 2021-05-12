@@ -74,6 +74,7 @@ NGCF:
   mess_dropout: [ 0.1, 0.1, 0.1 ]
   neg_item_num: 5
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
+  stop_epoch: 40
 
 BPRMF:
   epoch_num: 250 # epoch times
@@ -83,6 +84,7 @@ BPRMF:
   decay: 0.0001
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
   neg_item_num: 5
+  stop_epoch: 40
 
 FM:
   epoch_num: 300 # epoch times

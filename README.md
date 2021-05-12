@@ -10,15 +10,14 @@ pip install -r requirements.txt
 ## Task
 每个任务执行时都会分配一个唯一ID,如 20210420215755 程序运行过程中，结果会保存到 temp文件夹，程序正常结束时，结果会从temp文件夹移动到output文件夹，因此output文件夹中总会保存成功执行的结果.
 
-| Task     | description                                | Target              |
-| -------- | ------------------------------------------ | ------------------- |
-| IR       | AGCN model for item recommendation         | item recommendation |
-| AI       | AGCN model for  attribute inference        | attribute inference |
-| BPRMF    | BPR_MF model for item recommendation       | item recommendation |
-| FM       | FM model for item recommendation           | item recommendation |
-| NGCF     | NGCF model for item recommendation         | item recommendation |
-| LP       | Label Propagation for  attribute inference | attribute inference |
-| Semi-GCN | Semi-GCN model for attribute inference     | attribute inference |
+| Task     | description                                                | Target                                      |
+| -------- | ---------------------------------------------------------- | ------------------------------------------- |
+| AGCN     | AGCN model for item recommendation and attribute inference | item recommendation and attribute inference |
+| BPRMF    | BPRMF model for item recommendation                        | item recommendation                         |
+| FM       | FM model for item recommendation                           | item recommendation                         |
+| NGCF     | NGCF model for item recommendation                         | item recommendation                         |
+| LP       | Label Propagation for  attribute inference                 | attribute inference                         |
+| Semi-GCN | Semi-GCN model for attribute inference                     | attribute inference                         |
 
 ### 1. AGCN
 
@@ -26,11 +25,11 @@ pip install -r requirements.txt
 
 ##### Train
 ```shell
-python -u main.py --task IR --istrain true --dataset_name movielens1M
+python -u main.py --task IR-Train  --dataset_name movielens1M
 ```
 ##### Test
 ```shell
-python -u main.py --task IR --istrain false --dataset_name movielens1M --train_id 20210420215755
+python -u main.py --task IR-Test  --dataset_name movielens1M --train_id 20210420215755
 ```
 
 #### Attribute Inference Task
