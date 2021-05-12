@@ -80,7 +80,7 @@ class NGCF_Manager(object):
                         epoch, topk, perf_info[i * 3], perf_info[i * 3 + 1], perf_info[i * 3 + 2]))
                     self.logger.info(output_cont[-1])
                 stop_epoch_count += 1
-                if best_ndcg < epoch_metric_dict[epoch][10]['ndcg']:
+                if best_ndcg <= epoch_metric_dict[epoch][10]['ndcg']:
                     best_ndcg = epoch_metric_dict[epoch][10]['ndcg']
                     best_output = output_cont
                     stop_epoch = 0

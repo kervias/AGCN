@@ -72,56 +72,57 @@ python -u main.py --task Semi-GCN --dataset_name movielens1M
 `/src/conf/datasets/`文件夹下保存了不同数据集的配置文件。 以`amazonVideoGames`为例
 
 ```yaml
-name: movielens-1M
-user_count: 6040 # 5652
-item_count: 3952
-feedback_count: 225288
+name: amazonVideoGames
+user_count: 31027
+item_count: 33899
 
+# attribute info
 user_attr:
+  have: false
+item_attr:
   have: true
   attr_type_num: 3
-  attr_dim_list: [2, 7, 21]
-  attr_type_list: [0, 0, 0] # 0 means single-label attribute and 1 means multi-label attributes
-item_attr:
-  have: false
+  attr_dim_list: [ 14, 52, 10 ]
+  attr_type_list: [ 1, 1, 0 ] # 0 means single-label attribute and 1 means multi-label attributes
 
+# AGCN
 AI:
   epoch_num: 300 # epoch times
-  iter_num: 20 # iter times
   free_emb_dim: 32 # free embedding dim
   learning_rate: 0.0005 # learning rate
-  batch_size: 1280
+  batch_size: 5120
   gamma: 0.001
   lambda1: 0.001
   lambda2: 0.001
-  attr_union_dim: 30 # attr_dim
-  gcn_layer: 2
+  attr_union_dim: 32
+  gcn_layer: 3
   neg_item_num: 5
 
 IR-Train:
   epoch_num: 300 # epoch times
-  iter_num: 20 # iter times
+  iter_num: 10 # iter times
   free_emb_dim: 32 # free embedding dim
   learning_rate: 0.0005 # learning rate
-  batch_size: 1280
+  batch_size: 5120
   gamma: 0.001
   lambda1: 0.001
   lambda2: 0.001
-  attr_union_dim: 30 # attr_dim
-  gcn_layer: 2
+  attr_union_dim: 32
+  gcn_layer: 3
   neg_item_num: 5
 
 IR-Test:
-  epoch_num: 300 # epoch times
   free_emb_dim: 32 # free embedding dim
   gamma: 0.001
   lambda1: 0.001
   lambda2: 0.001
-  attr_union_dim: 30 # attr_dim
-  gcn_layer: 2
+  attr_union_dim: 32
+  gcn_layer: 3
   neg_item_num: 5
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
 
+
+# baselines for attribute inference
 LP:
   epoch_num: 50
   loss_threshold: 0.01
@@ -131,14 +132,15 @@ LP:
 Semi-GCN:
   epoch_num: 50
   gcn_layer: 3
-  attr_union_dim: 30
-  layer_dim_list: [30, 30, 30, 30]
-  learning_rate: 0.1
+  attr_union_dim: 32
+  layer_dim_list: [32, 32, 32, 32]
+  learning_rate: 0.05
 
+# baselines for item recommendation
 NGCF:
-  epoch_num: 250 # epoch times
+  epoch_num: 100 # epoch times
   emb_size: 32 # free embedding dim
-  learning_rate: 0.005 # learning rate
+  learning_rate: 0.0005 # learning rate
   batch_size: 2048
   gcn_layer_num: 3
   layers: [ 32, 32, 32, 32]
@@ -147,16 +149,18 @@ NGCF:
   mess_dropout: [ 0.1, 0.1, 0.1 ]
   neg_item_num: 5
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
+  stop_epoch: 40
 
 BPRMF:
   epoch_num: 250 # epoch times
-  learning_rate: 0.005 # learning rate
+  learning_rate: 0.0005 # learning rate
   free_emb_dim: 32
   batch_size: 2048
   decay: 0.0001
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
   neg_item_num: 5
-  
+  stop_epoch: 40
+
 FM:
   epoch_num: 300 # epoch times
   free_emb_dim: 32 # free embedding dim

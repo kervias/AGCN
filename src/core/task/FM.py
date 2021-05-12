@@ -67,6 +67,7 @@ class FM_Manager(object):
         user_attrs_input = torch.from_numpy(user_attrs_missing).cuda() if self.user_attr_cfg['have'] else None
         epoch_num = self.model_cfg['epoch_num']
         batch_size = self.model_cfg['batch_size']
+        stop_epoch = self.model_cfg['stop_epoch']
 
         dataloader = DataLoader(
             TrainDataset(TrainDataset.gene_UI_from_U2I(train_U2I, num_neg_item=self.model_cfg['neg_item_num']),
@@ -86,6 +87,7 @@ class FM_Manager(object):
         epoch_metric_dict = defaultdict(lambda: defaultdict(dict))
         best_ndcg = -np.inf
         best_output = []
+        stop_epoch_count = 0
         for epoch in range(epoch_num):
             mean_loss, mean_loss1, mean_loss2, mean_auc = sess.train(dataloader, optimizer)
             self.logger.info("[EPOCH=%03d]: (auc=%.4f) (loss=%.4f) (loss1=%.4f) (loss2=%.4f)" % (
@@ -111,12 +113,13 @@ class FM_Manager(object):
                     output_cont.append("[epoch=%03d]@%d: (ndcg=%.4f) (hr=%.4f) (recall=%.4f)" % (
                         epoch, topk, perf_info[i * 3], perf_info[i * 3 + 1], perf_info[i * 3 + 2]))
                     self.logger.info(output_cont[-1])
-
-                    if best_ndcg < epoch_metric_dict[epoch][10]['ndcg']:
-                        best_ndcg = epoch_metric_dict[epoch][10]['ndcg']
-                        best_output = output_cont
+                stop_epoch_count += 1
+                if best_ndcg <= epoch_metric_dict[epoch][10]['ndcg']:
+                    best_ndcg = epoch_metric_dict[epoch][10]['ndcg']
+                    best_output = output_cont
                 np.save(self.tmpout_folder_path + "/all_metric/all_metrics-{}.npy".format(epoch), all_perf)
-
+                if stop_epoch_count > stop_epoch:
+                    break
         self.logger.info("Train and Test complete! The best metric of epochs: \n" + '\n'.join(best_output))
         with open(self.tmpout_folder_path + "/results.json", 'w', encoding='utf-8') as f:
             data = {
