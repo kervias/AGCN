@@ -5,6 +5,7 @@
 from .commonUtil import PathUtil, IDUtil, DecoratorTimer, tensor2npy, tensor2cpu
 from .configUtil import UnionConfig
 from .loggerUtil import LoggerUtil
+from .parseUtil import add_argument_from_dict_format
 
 
 __all__ = [
@@ -14,5 +15,6 @@ __all__ = [
     'LoggerUtil',
     'DecoratorTimer',
     'tensor2npy',
-    'tensor2cpu'
+    'tensor2cpu',
+    'add_argument_from_dict_format'
 ]

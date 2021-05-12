@@ -13,10 +13,10 @@ class EntryPoint(object):
         self.cfg = cfg
 
     def start(self):
-        if self.cfg.task == 'IR' and self.cfg.istrain is True:
+        if self.cfg.task == 'IR-Train':
             task = IR_Train(self.cfg)
             task.train()
-        elif self.cfg.task == 'IR' and self.cfg.istrain is False:
+        elif self.cfg.task == 'IR-Test':
             task = IR_Test(self.cfg)
             task.test()
         elif self.cfg.task == 'AI':
