@@ -128,7 +128,7 @@ class AI(object):
                                     ap_list.append(ap)
                             map = sum(ap_list) / len(ap_list)
                             item_metrics_dict[i].append(map)
-                            self.logger.info("[EPOCH=%d]: item_attr<%d, multi>: map:%.4f" % (
+                            self.logger.info("[EPOCH=%03d]: item_attr<%d, multi>: map:%.4f" % (
                                 epoch_ind, i, map
                             ))
                         else:
@@ -149,7 +149,7 @@ class AI(object):
                                 #     acc += 1
                             acc /= (item_attrs_infer.shape[0] - count)
                             item_metrics_dict[i].append(acc)
-                            self.logger.info("[EPOCH=%d]: item_attr<%d, single>: acc:%.4f" % (
+                            self.logger.info("[EPOCH=%03d]: item_attr<%d, single>: acc:%.4f" % (
                                 epoch_ind, i, acc
                             ))
 
@@ -180,7 +180,7 @@ class AI(object):
                                     ap_list.append(ap)
                             map = sum(ap_list) / len(ap_list)
                             user_metrics_dict[i].append(map)
-                            self.logger.info("[EPOCH=%d]:user_attr<%d, multi>: map:%.4f" % (
+                            self.logger.info("[EPOCH=%03d]:user_attr<%d, multi>: map:%.4f" % (
                                 epoch_ind, i, map
                             ))
                         else:
@@ -203,23 +203,23 @@ class AI(object):
                                 #     acc += 1
                             acc /= (user_attrs_infer.shape[0] - count)
                             user_metrics_dict[i].append(acc)
-                            self.logger.info("[EPOCH=%d]: user_attr<%d, single>: acc:%.4f" % (
+                            self.logger.info("[EPOCH=%03d]: user_attr<%d, single>: acc:%.4f" % (
                                 epoch_ind, i, acc
                             ))
 
-            if epoch_ind > 10:  # 收敛条件判断
-                bool_item, bool_user = True, True
-                if self.item_attr_cfg['have'] is True:
-                    for i in range(self.item_attr_cfg['attr_type_num']):
-                        bool_item = bool_item and item_metrics_dict[i][-1] <= item_metrics_dict[i][-2] <= \
-                                    item_metrics_dict[i][-3]
-
-                if self.user_attr_cfg['have'] is True:
-                    for i in range(self.user_attr_cfg['attr_type_num']):
-                        bool_user = bool_user and user_metrics_dict[i][-1] <= user_metrics_dict[i][-2] <= \
-                                    user_metrics_dict[i][-3]
-                if bool_item is True and bool_user is True:
-                    break
+            # if epoch_ind > 10:  # 收敛条件判断
+            #     bool_item, bool_user = True, True
+            #     if self.item_attr_cfg['have'] is True:
+            #         for i in range(self.item_attr_cfg['attr_type_num']):
+            #             bool_item = bool_item and item_metrics_dict[i][-1] <= item_metrics_dict[i][-2] <= \
+            #                         item_metrics_dict[i][-3]
+            #
+            #     if self.user_attr_cfg['have'] is True:
+            #         for i in range(self.user_attr_cfg['attr_type_num']):
+            #             bool_user = bool_user and user_metrics_dict[i][-1] <= user_metrics_dict[i][-2] <= \
+            #                         user_metrics_dict[i][-3]
+            #     if bool_item is True and bool_user is True:
+            #         break
 
         self.logger.info("收敛完毕！")
         item_max_metric_dict, user_max_metric_dict = dict(), dict()

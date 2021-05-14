@@ -83,7 +83,7 @@ class NGCF_Manager(object):
                 if best_ndcg <= epoch_metric_dict[epoch][10]['ndcg']:
                     best_ndcg = epoch_metric_dict[epoch][10]['ndcg']
                     best_output = output_cont
-                    stop_epoch = 0
+                    stop_epoch_count = 0
                 np.save(self.tmpout_folder_path + "/all_metric/all_metrics-{}.npy".format(epoch), all_perf)
                 if stop_epoch_count > stop_epoch:
                     break

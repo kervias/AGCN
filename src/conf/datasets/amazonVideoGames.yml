@@ -99,3 +99,4 @@ FM:
   gcn_layer: 2
   neg_item_num: 5
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
+  stop_epoch: 40

@@ -27,7 +27,7 @@ class IR_Test(object):
     def test(self):
         # 1. 加载数据
         loadutil = LoadUtil(cfg=self.cfg)
-
+        train_and_val_U2I = loadutil.merge_U2I_dict(loadutil.load_train_U2I(), loadutil.load_val_U2I(), self.user_count)
         item_attrs_missing = None
         item_attrs_missing_index_list = None
         if self.item_attr_cfg['have'] is True:
@@ -71,7 +71,7 @@ class IR_Test(object):
                 # test set
                 perf_info, all_perf = evaluate(
                     user_emb, item_emb,
-                    loadutil.load_train_U2I(),
+                    train_and_val_U2I,
                     loadutil.load_test_U2I(), args={'topks': self.model_cfg['test_topks'], 'cores': 4})
 
                 for i, topk in enumerate(self.model_cfg['test_topks']):

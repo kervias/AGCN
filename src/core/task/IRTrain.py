@@ -119,7 +119,7 @@ class IR_Train(object):
                     torch.save(model.state_dict(), f=self.tmpout_folder_path + "/pths/" + pth_file_name)
 
                 # 跳出epoch条件
-                if ((iter_ind == 0 and epoch_ind > 40) or (iter_ind > 0 and epoch_ind > 10)) and epoch_ndcg_list[-1] <= \
+                if ((iter_ind == 0 and epoch_ind > 60) or (iter_ind > 0 and epoch_ind > 40)) and epoch_ndcg_list[-1] <= \
                         epoch_ndcg_list[-2] <= epoch_ndcg_list[-3]:
                     iter_hr_list.append(best_hr)
                     iter_ndcg_list.append(best_ndcg)
