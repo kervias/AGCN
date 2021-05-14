@@ -6,7 +6,7 @@ from core.evaluate.performance import evaluate
 import torch
 import numpy as np
 import json
-from utils import tensor2npy
+from utils import tensor2npy, UnionConfig
 
 
 class IR_Test(object):
@@ -50,8 +50,9 @@ class IR_Test(object):
         model = AGCN(cfg=self.cfg, task='IR-Test')
         # model.to(self.device)
         model.init_net_data(
-            graph_adj_mat=graph_adjmat
+            graph_adj_mat=graph_adjmat.cuda()
         )
+        model = model.cuda()
 
         # 将加载后的数据转换为Tensor
         item_attrs_input = torch.from_numpy(item_attrs_missing).cuda() if self.item_attr_cfg['have'] else None
@@ -72,7 +73,7 @@ class IR_Test(object):
                 perf_info, all_perf = evaluate(
                     user_emb, item_emb,
                     train_and_val_U2I,
-                    loadutil.load_test_U2I(), args={'topks': self.model_cfg['test_topks'], 'cores': 4})
+                    loadutil.load_test_U2I(), args=UnionConfig({'topks': self.model_cfg['test_topks'], 'cores': 4}))
 
                 for i, topk in enumerate(self.model_cfg['test_topks']):
                     output_cont.append("[%d]@%d: (ndcg=%.4f) (hr=%.4f) (recall=%.4f)" % (

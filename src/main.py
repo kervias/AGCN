@@ -8,8 +8,11 @@ import shutil
 import traceback
 import copy
 import sys
+import torch.cuda
+
 
 registered_task_list = ['IR-Train', 'IR-Test', 'AI', 'LP', 'Semi-GCN', 'NGCF', 'BPRMF', 'FM']
+gpu_count = torch.cuda.device_count()
 
 
 def get_config_object_and_parse_args():
@@ -20,6 +23,7 @@ def get_config_object_and_parse_args():
                         choices=registered_task_list,
                         help='task_name: [IR-Train, IR-Test,AI, LP, Semi-GCN, NGCF, BPRMF, FM]')
     parser.add_argument("--train_id", type=str, default=None, help="item recommendation train task id")
+    parser.add_argument("--gpu_id", type=int, choices=list(range(-1, gpu_count)), default=gpu_count-1, help='gpu_id')
     args, unknown_args = parser.parse_known_args()
 
     config = UnionConfig.from_py_module(settings)  # get config from settings.py
@@ -42,6 +46,7 @@ def get_config_object_and_parse_args():
         if key in args2.__dict__:
             model_cfg[key] = args2.__dict__[key]
 
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(config.gpu_id)
     return config
 
 
