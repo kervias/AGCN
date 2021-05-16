@@ -1,3 +1,5 @@
+import json
+
 from utils import UnionConfig, LoggerUtil, DecoratorTimer, PathUtil, add_argument_from_dict_format
 from conf import settings
 from core.entrypoint import EntryPoint
@@ -75,6 +77,14 @@ def init_all(cfg: UnionConfig):
             cfg.tmpout_folder_path + "/all_metric",
             cfg.output_folder_path
         )
+        # load train config
+        replace_key = ['free_emb_dim', 'gamma', 'lambda1', 'lambda2', 'attr_union_dim', 'gcn_layer']
+        with open(cfg.train_folder_path+"/config.json", 'r', encoding='utf-8') as f:
+            train_cfg = json.load(f)['yml_cfg']['IR-Train']
+            for key in train_cfg:
+                if key in replace_key:
+                    cfg.yml_cfg['IR-Test'][key] = train_cfg[key]
+        cfg.train_cfg = train_cfg
     elif cfg.task in ['AI', 'LP', 'Semi-GCN']:
         cfg.tmpout_folder_path = cfg.TMPOUT_FOLDER_PATH + "/{}/{}".format(cfg.task, cfg.ID)
         cfg.output_folder_path = cfg.OUTPUT_FOLDER_PATH + "/{}".format(cfg.task)
