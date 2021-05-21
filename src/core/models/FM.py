@@ -132,27 +132,27 @@ class FM(torch.nn.Module):
                    item_existing_index_list=None, item_gt_list=None):
         gamma = self.model_cfg['gamma']
         loss1 = self.link_predict_loss(user_index, item_index_1, item_index_2)
-        loss2 = torch.FloatTensor([0.0]).cuda()
-        if self.user_attr_cfg['have']:
-            assert user_existing_index_list is not None and user_gt_list is not None
-            assert len(user_existing_index_list) == len(user_gt_list) == len(self.user_attr_cfg['attr_dim_list'])
-            attr_dim_list = self.user_attr_cfg['attr_dim_list']
-            for i in range(len(attr_dim_list)):
-                slice_l = sum(attr_dim_list[0:i])
-                slice_r = slice_l + attr_dim_list[i]
-                gt_list = user_gt_list[i]
-                gt_list = torch.from_numpy(np.asarray(gt_list)).cuda()
-                loss2 += self.user_attr_infer_loss(user_existing_index_list[i], gt_list, slice_l, slice_r)
+        # loss2 = torch.FloatTensor([0.0]).cuda()
+        # if self.user_attr_cfg['have']:
+        #     assert user_existing_index_list is not None and user_gt_list is not None
+        #     assert len(user_existing_index_list) == len(user_gt_list) == len(self.user_attr_cfg['attr_dim_list'])
+        #     attr_dim_list = self.user_attr_cfg['attr_dim_list']
+        #     for i in range(len(attr_dim_list)):
+        #         slice_l = sum(attr_dim_list[0:i])
+        #         slice_r = slice_l + attr_dim_list[i]
+        #         gt_list = user_gt_list[i]
+        #         gt_list = torch.from_numpy(np.asarray(gt_list)).cuda()
+        #         loss2 += self.user_attr_infer_loss(user_existing_index_list[i], gt_list, slice_l, slice_r)
+        #
+        # if self.item_attr_cfg['have']:
+        #     assert item_existing_index_list is not None and item_gt_list is not None
+        #     assert len(item_existing_index_list) == len(item_gt_list) == len(self.item_attr_cfg['attr_dim_list'])
+        #     attr_dim_list = self.item_attr_cfg['attr_dim_list']
+        #     for i in range(len(attr_dim_list)):
+        #         slice_l = sum(attr_dim_list[0:i])
+        #         slice_r = slice_l + attr_dim_list[i]
+        #         gt_list = item_gt_list[i]
+        #         gt_list = torch.from_numpy(np.asarray(gt_list)).cuda()
+        #         loss2 += self.item_attr_infer_loss(item_existing_index_list[i], gt_list, slice_l, slice_r)
 
-        if self.item_attr_cfg['have']:
-            assert item_existing_index_list is not None and item_gt_list is not None
-            assert len(item_existing_index_list) == len(item_gt_list) == len(self.item_attr_cfg['attr_dim_list'])
-            attr_dim_list = self.item_attr_cfg['attr_dim_list']
-            for i in range(len(attr_dim_list)):
-                slice_l = sum(attr_dim_list[0:i])
-                slice_r = slice_l + attr_dim_list[i]
-                gt_list = item_gt_list[i]
-                gt_list = torch.from_numpy(np.asarray(gt_list)).cuda()
-                loss2 += self.item_attr_infer_loss(item_existing_index_list[i], gt_list, slice_l, slice_r)
-
-        return loss1 + gamma * loss2, loss1, loss2
+        return loss1

@@ -89,9 +89,9 @@ class FM_Manager(object):
         best_output = []
         stop_epoch_count = 0
         for epoch in range(epoch_num):
-            mean_loss, mean_loss1, mean_loss2, mean_auc = sess.train(dataloader, optimizer)
-            self.logger.info("[EPOCH=%03d]: (auc=%.4f) (loss=%.4f) (loss1=%.4f) (loss2=%.4f)" % (
-                epoch, mean_auc, mean_loss, mean_loss1, mean_loss2))
+            mean_loss,  mean_auc = sess.train(dataloader, optimizer)
+            self.logger.info("[EPOCH=%03d]: (auc=%.4f) (loss=%.4f) " % (
+                epoch, mean_auc, mean_loss))
 
             with torch.no_grad():
                 user_emb, item_emb = model(user_attrs_input=user_attrs_input, item_attrs_input=item_attrs_input)

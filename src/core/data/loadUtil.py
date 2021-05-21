@@ -25,6 +25,8 @@ class LoadUtil(object):
         self.list_item_attrs_missing_index = None
         self.list_user_attrs_existing_index = None
         self.list_user_attrs_missing_index = None
+        self.ndarray_user_attrs_LP = None
+        self.ndarray_item_attrs_LP = None
         self.user_gt_list = None
         self.item_gt_list = None
         self.dict_neg_samples = dict()
@@ -231,3 +233,20 @@ class LoadUtil(object):
                 continue
             U2I[uid] = list(set(t1 + t2))
         return U2I
+
+
+    @DecoratorTimer()
+    def load_user_attrs_LP(self, filename="user_attr_LP.npy"):
+        assert self.yml_cfg['user_attr'].get('have', False) is True
+        if self.ndarray_user_attrs_LP is None:
+            filepath = self._data_folder + "/" + filename
+            self.ndarray_user_attrs_LP = np.load(filepath, allow_pickle=True).astype(np.float32)
+        return self.ndarray_user_attrs_LP
+
+    @DecoratorTimer()
+    def load_item_attrs_LP(self, filename="item_attr_LP.npy"):
+        assert self.yml_cfg['item_attr'].get('have', False) is True
+        if self.ndarray_item_attrs_LP is None:
+            filepath = self._data_folder + "/" + filename
+            self.ndarray_item_attrs_LP = np.load(filepath, allow_pickle=True).astype(np.float32)
+        return self.ndarray_item_attrs_LP

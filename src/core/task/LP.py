@@ -65,6 +65,7 @@ class LP_Manager(object):
 
         item_max_metric_dict, user_max_metric_dict = dict(), dict()
         if self.user_attr_cfg['have'] is True:
+            user_attrs_infer_save = user_attrs_missing.copy()
             self.logger.info("start handle user attribute...")
             trans_mat = self.get_transform_mat(self.get_similarity_mat(train_U2I, count=select_count),
                                                count=self.user_count,
@@ -89,14 +90,18 @@ class LP_Manager(object):
                     self.logger.info("[EPOCH={:03d}]: user_attr<{}, {}>: {}:{:.4f}".format(
                         epoch, i, *('multi', 'map') if attr_type == 1 else ('single', 'acc'), metric
                     ))
-                    best_metric = max(best_metric, metric)
                     user_attr_input[user_attrs_missing_index_list[i]] = attr_pd[user_attrs_missing_index_list[i]]
+                    if best_metric < metric:
+                        best_metric = metric
+                        user_attrs_infer_save[user_attrs_missing_index_list[i], slice_l:slice_r] = attr_pd[user_attrs_missing_index_list[i]]
                     if loss.item() < loss_threshold:
                         break
                 user_max_metric_dict[i] = best_metric
                 self.logger.info("Best metric result of {}th user attribute is {:.4f}".format(i, best_metric))
+                np.save(self.tmpout_folder_path+"/user_pd_LP_best.npy", user_attrs_infer_save)
 
         if self.item_attr_cfg['have'] is True:
+            item_attrs_infer_save = item_attrs_missing.copy()
             self.logger.info("start handle item attribute...")
             train_I2U = self.load_util.get_I2U_from_U2I(train_U2I, to_list=False)
             trans_mat = self.get_transform_mat(self.get_similarity_mat(train_I2U, count=select_count),
@@ -122,13 +127,16 @@ class LP_Manager(object):
                     self.logger.info("[EPOCH={:03d}]: item_attr<{}, {}>: {}:{:.4f}".format(
                         epoch, i, *('multi', 'map') if attr_type == 1 else ('single', 'acc'), metric
                     ))
-                    best_metric = max(best_metric, metric)
+                    #best_metric = max(best_metric, metric)
                     item_attr_input[item_attrs_missing_index_list[i]] = attr_pd[item_attrs_missing_index_list[i]]
+                    if best_metric < metric:
+                        best_metric = metric
+                        item_attrs_infer_save[item_attrs_missing_index_list[i], slice_l:slice_r] = attr_pd[item_attrs_missing_index_list[i]]
                     if loss.item() < loss_threshold:
                         break
                 item_max_metric_dict[i] = best_metric
                 self.logger.info("Best metric result of {}th item attribute is {:.4f}".format(i, best_metric))
-
+                np.save(self.tmpout_folder_path + "/item_pd_LP_best.npy", item_attrs_infer_save)
         # ====================
         self.logger.info("训练完毕！")
         output_cont = []
