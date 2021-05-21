@@ -93,12 +93,12 @@ class LP_Manager(object):
                     user_attr_input[user_attrs_missing_index_list[i]] = attr_pd[user_attrs_missing_index_list[i]]
                     if best_metric < metric:
                         best_metric = metric
-                        user_attrs_infer_save[user_attrs_missing_index_list[i], slice_l:slice_r] = attr_pd[user_attrs_missing_index_list[i]]
+                        user_attrs_infer_save[user_attrs_missing_index_list[i], slice_l:slice_r] = tensor2npy(attr_pd[user_attrs_missing_index_list[i]])
                     if loss.item() < loss_threshold:
                         break
                 user_max_metric_dict[i] = best_metric
                 self.logger.info("Best metric result of {}th user attribute is {:.4f}".format(i, best_metric))
-                np.save(self.tmpout_folder_path+"/user_pd_LP_best.npy", user_attrs_infer_save)
+                np.save(self.tmpout_folder_path+"/user_attr_LP.npy", user_attrs_infer_save)
 
         if self.item_attr_cfg['have'] is True:
             item_attrs_infer_save = item_attrs_missing.copy()
@@ -131,12 +131,12 @@ class LP_Manager(object):
                     item_attr_input[item_attrs_missing_index_list[i]] = attr_pd[item_attrs_missing_index_list[i]]
                     if best_metric < metric:
                         best_metric = metric
-                        item_attrs_infer_save[item_attrs_missing_index_list[i], slice_l:slice_r] = attr_pd[item_attrs_missing_index_list[i]]
+                        item_attrs_infer_save[item_attrs_missing_index_list[i], slice_l:slice_r] = tensor2npy(attr_pd[item_attrs_missing_index_list[i]])
                     if loss.item() < loss_threshold:
                         break
                 item_max_metric_dict[i] = best_metric
                 self.logger.info("Best metric result of {}th item attribute is {:.4f}".format(i, best_metric))
-                np.save(self.tmpout_folder_path + "/item_pd_LP_best.npy", item_attrs_infer_save)
+                np.save(self.tmpout_folder_path + "/item_attr_LP.npy", item_attrs_infer_save)
         # ====================
         self.logger.info("训练完毕！")
         output_cont = []
