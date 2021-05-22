@@ -43,7 +43,7 @@ class FM_Manager(object):
         item_gt_list = None
         if self.item_attr_cfg['have'] is True:
             item_attrs_complete = self.load_util.load_item_attrs_complete()
-            item_attrs_missing = self.load_util.load_item_attrs_missing()
+            item_attrs_missing = self.load_util.load_item_attrs_LP()
             item_attrs_existing_index_list = self.load_util.load_item_attrs_existing_index()
             item_attrs_missing_index_list = self.load_util.load_item_attrs_missing_index()
             item_gt_list = self.load_util.load_item_gt_list()
@@ -55,7 +55,7 @@ class FM_Manager(object):
         user_gt_list = None
         if self.user_attr_cfg['have'] is True:
             user_attrs_complete = self.load_util.load_user_attrs_complete()
-            user_attrs_missing = self.load_util.load_user_attrs_missing()
+            user_attrs_missing = self.load_util.load_user_attrs_LP()
             user_attrs_existing_index_list = self.load_util.load_user_attrs_existing_index()
             user_attrs_missing_index_list = self.load_util.load_user_attrs_missing_index()
             user_gt_list = self.load_util.load_user_gt_list()
@@ -101,7 +101,7 @@ class FM_Manager(object):
                 perf_info, all_perf = evaluate(
                     user_emb, item_emb, train_and_val_U2I, test_U2I, args=UnionConfig({
                         'topks': self.model_cfg['test_topks'],
-                        'cores': 4
+                        'cores': 1
                     }))
                 output_cont = []
                 for i, topk in enumerate(self.model_cfg['test_topks']):
@@ -117,6 +117,7 @@ class FM_Manager(object):
                 if best_ndcg <= epoch_metric_dict[epoch][10]['ndcg']:
                     best_ndcg = epoch_metric_dict[epoch][10]['ndcg']
                     best_output = output_cont
+                    stop_epoch_count = 0
                 np.save(self.tmpout_folder_path + "/all_metric/all_metrics-{}.npy".format(epoch), all_perf)
                 if stop_epoch_count > stop_epoch:
                     break
