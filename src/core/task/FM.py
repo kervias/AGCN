@@ -101,7 +101,7 @@ class FM_Manager(object):
                 perf_info, all_perf = evaluate(
                     user_emb, item_emb, train_and_val_U2I, test_U2I, args=UnionConfig({
                         'topks': self.model_cfg['test_topks'],
-                        'cores': 1
+                        'cores': 4
                     }))
                 output_cont = []
                 for i, topk in enumerate(self.model_cfg['test_topks']):
