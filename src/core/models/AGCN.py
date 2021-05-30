@@ -148,7 +148,8 @@ class AGCN(torch.nn.Module):
 
     def total_loss(self, user_index, item_index_1, item_index_2, user_existing_index_list=None, user_gt_list=None,
                    item_existing_index_list=None, item_gt_list=None):
-        gamma = self.model_cfg['gamma']
+        gamma1 = self.model_cfg['gamma1']
+        gamma2 = self.model_cfg['gamma2']
         loss1 = self.link_predict_loss(user_index, item_index_1, item_index_2)
         loss2 = torch.FloatTensor([0.0]).cuda()
         if self.user_attr_cfg['have']:
@@ -173,4 +174,4 @@ class AGCN(torch.nn.Module):
                 gt_list = torch.from_numpy(np.asarray(gt_list)).cuda()
                 loss2 += self.item_attr_infer_loss(item_existing_index_list[i], gt_list, slice_l, slice_r)
 
-        return loss1 + gamma * loss2, loss1, loss2
+        return gamma1*loss1 + gamma2 * loss2, loss1, loss2

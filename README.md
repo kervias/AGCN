@@ -91,7 +91,8 @@ AI:
   free_emb_dim: 32 # free embedding dim
   learning_rate: 0.0005 # learning rate
   batch_size: 5120
-  gamma: 0.001
+  gamma1: 1
+  gamma2: 0.001
   lambda1: 0.001
   lambda2: 0.001
   attr_union_dim: 32
@@ -104,7 +105,8 @@ IR-Train:
   free_emb_dim: 32 # free embedding dim
   learning_rate: 0.0005 # learning rate
   batch_size: 5120
-  gamma: 0.001
+  gamma1: 1
+  gamma2: 0.001
   lambda1: 0.001
   lambda2: 0.001
   attr_union_dim: 32
@@ -118,9 +120,7 @@ IR-Test:
   lambda2: 0.001
   attr_union_dim: 32
   gcn_layer: 3
-  neg_item_num: 5
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
-
 
 # baselines for attribute inference
 LP:
@@ -165,14 +165,13 @@ FM:
   epoch_num: 300 # epoch times
   free_emb_dim: 32 # free embedding dim
   learning_rate: 0.0005 # learning rate
-  batch_size: 2048
-  gamma: 0.001
+  batch_size: 5120
   lambda1: 0.001
   lambda2: 0.001
   attr_union_dim: 32 # attr_dim
-  gcn_layer: 2
   neg_item_num: 5
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
+  stop_epoch: 25
 ```
 
 ## Data format
@@ -198,16 +197,18 @@ item_attr:
 
 根据AmazonVideoGames属性信息，其没有user属性，有三种item属性，每个属性的标签数分别为14、52、10，前两个为多标签属性，后两个为单标签属性。
 
-| filename                 |                            format                            |     type     | description                      |
-| ------------------------ | :----------------------------------------------------------: | :----------: | -------------------------------- |
-| total_U2I.npy            |                    {uid: [iid, iid], ...}                    | dict\<list\> | total feedbacks                  |
-| train_U2I.npy            |                    {uid: [iid, iid], ...}                    | dict\<list\> | train feedbacks                  |
-| val_U2I.npy              |                    {uid: [iid, iid], ...}                    | dict\<list\> | val feedbacks                    |
-| test_U2I.npy             |                    {uid: [iid, iid], ...}                    | dict\<list\> | test feedbacks                   |
-| complete_user_attr       |                            ------                            |    ------    | complete user attributes matrix  |
-| missing_user_attr        |                            ------                            |    ------    | missing user attributes matrix   |
-| existing_user_attr_index |                            ------                            |    ------    | store user attribute infomation  |
-| complete_item_attr       |               \|U\| * sum(item_attr_dim_list)                |  np.ndarray  | complete item attributes matrix  |
-| missing_item_attr        |               \|U\| * sum(item_attr_dim_list)                |  np.ndarray  | missing item attributes matrix   |
-| existing_item_attr_index | {'attr_dim_list': attr_dim_list, 'existing_index_list':[list1, list2, list3]} |     dict     | store item  attribute infomation |
+| filename                     |                            format                            |     type     | description                                    |
+| ---------------------------- | :----------------------------------------------------------: | :----------: | ---------------------------------------------- |
+| total_U2I.npy                |                    {uid: [iid, iid], ...}                    | dict\<list\> | total feedbacks                                |
+| train_U2I.npy                |                    {uid: [iid, iid], ...}                    | dict\<list\> | train feedbacks                                |
+| val_U2I.npy                  |                    {uid: [iid, iid], ...}                    | dict\<list\> | val feedbacks                                  |
+| test_U2I.npy                 |                    {uid: [iid, iid], ...}                    | dict\<list\> | test feedbacks                                 |
+| complete_user_attr.npy       |                            ------                            |  np.ndarray  | complete user attributes matrix                |
+| missing_user_attr.npy        |                            ------                            |  np.ndarray  | missing user attributes matrix                 |
+| existing_user_attr_index.npy |                            ------                            |    ------    | store user attribute infomation                |
+| complete_item_attr.npy       |               \|U\| * sum(item_attr_dim_list)                |  np.ndarray  | complete item attributes matrix                |
+| missing_item_attr.npy        |               \|U\| * sum(item_attr_dim_list)                |  np.ndarray  | missing item attributes matrix                 |
+| existing_item_attr_index.npy | {'attr_dim_list': attr_dim_list, 'existing_index_list':[list1, list2, list3]} |     dict     | store item  attribute infomation               |
+| user_attr_LP.npy             |                            ------                            |  np.ndarray  | inferred LP user attribute result for FM model |
+| item_attr_LP.npy             |                            ------                            |  np.ndarray  | inferred LP item attribute result for FM model |
 

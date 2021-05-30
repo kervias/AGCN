@@ -3,7 +3,7 @@ from collections import defaultdict
 
 # load data
 data_u2i = np.load("../../../data/amazonVideoGames/train_U2I.npy", allow_pickle=True).tolist()
-metric_filename = 'BPRMF-all_metrics-183.npy'
+metric_filename = 'AGCN-0.npy'
 
 # split_group
 def split_group_by_assign(U2I: dict, assign: list = [4, 8, 16, 32, np.inf]):

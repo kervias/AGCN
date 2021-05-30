@@ -78,7 +78,7 @@ def init_all(cfg: UnionConfig):
             cfg.output_folder_path
         )
         # load train config
-        replace_key = ['free_emb_dim', 'gamma', 'lambda1', 'lambda2', 'attr_union_dim', 'gcn_layer']
+        replace_key = ['free_emb_dim', 'gamma1', 'gamma2', 'lambda1', 'lambda2', 'attr_union_dim', 'gcn_layer']
         with open(cfg.train_folder_path+"/config.json", 'r', encoding='utf-8') as f:
             train_cfg = json.load(f)['yml_cfg']['IR-Train']
             for key in train_cfg:

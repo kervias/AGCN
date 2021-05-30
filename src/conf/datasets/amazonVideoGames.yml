@@ -17,7 +17,8 @@ AI:
   free_emb_dim: 32 # free embedding dim
   learning_rate: 0.0005 # learning rate
   batch_size: 5120
-  gamma: 0.001
+  gamma1: 1
+  gamma2: 0.001
   lambda1: 0.001
   lambda2: 0.001
   attr_union_dim: 32
@@ -30,7 +31,8 @@ IR-Train:
   free_emb_dim: 32 # free embedding dim
   learning_rate: 0.0005 # learning rate
   batch_size: 5120
-  gamma: 0.001
+  gamma1: 1
+  gamma2: 0.001
   lambda1: 0.001
   lambda2: 0.001
   attr_union_dim: 32
@@ -45,7 +47,6 @@ IR-Test:
   attr_union_dim: 32
   gcn_layer: 3
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
-
 
 # baselines for attribute inference
 LP:
@@ -91,11 +92,9 @@ FM:
   free_emb_dim: 32 # free embedding dim
   learning_rate: 0.0005 # learning rate
   batch_size: 5120
-  gamma: 0.001
   lambda1: 0.001
   lambda2: 0.001
   attr_union_dim: 32 # attr_dim
-  gcn_layer: 2
   neg_item_num: 5
   test_topks: [ 5,10,15,20,25,30,35,40,45,50 ]
   stop_epoch: 25
