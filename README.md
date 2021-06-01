@@ -1,13 +1,18 @@
-# Graduation Design Project - AGCN
-> Multi-task Algorithm for item recommendation task(IR) and attribute inference task(AI)
+# Undergraduate Graduation Design Project - AGCN
+> + Multi-task Algorithm for item recommendation task(IR) and attribute inference task(AI)
+>
+> + Adaptive Graph Convolutional Networks(AGCN)
+> + AGCN raw github: https://github.com/yimutianyang/AGCN 
 
 ## Install
+
 ```shell
 pip install torch==1.8.0+cu102 -f https://download.pytorch.org/whl/torch_stable.html
 pip install -r requirements.txt
 ```
 
-## Task
+## Usage
+
 每个任务执行时都会分配一个唯一ID,如 20210420215755 程序运行过程中，结果会保存到 temp文件夹，程序正常结束时，结果会从temp文件夹移动到output文件夹，因此output文件夹中总会保存成功执行的结果.
 
 | Task     | description                                                | Target                                      |
