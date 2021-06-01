@@ -9,7 +9,7 @@ class Generate:
 
     def __init__(self, **kwargs):
         self._save_folder = os.path.realpath(kwargs.get('save_folder') or "./handled")
-        self._raw_folder = os.path.realpath(kwargs.get('raw_folder') or "./raw")
+        self._raw_folder = os.path.realpath(kwargs.get('raw_folder') or "./ml-1m")
         if not os.path.exists(self._save_folder):
             os.makedirs(self._save_folder)
         assert os.path.exists(self._raw_folder)
@@ -177,14 +177,74 @@ class Generate:
         for i in range(len_list.__len__()):
             # 针对不同属性，采取不同随机删除处理
             start_ind = sum(len_list[0:i])
-            stop_ind = sum(len_list[0:i+1])
+            stop_ind = sum(len_list[0:i + 1])
             existing_user_attr_index = random.sample(itemset, int(self.user_count * (1 - del_percent)))
             missing_user_attr_index = list(itemset - set(existing_user_attr_index))
             padding_attr_vector = np.mean(complete_user_attr[existing_user_attr_index, start_ind:stop_ind], axis=0)
-            missing_user_attr[missing_user_attr_index, start_ind:stop_ind] = np.tile(padding_attr_vector, (len(missing_user_attr_index), 1))
+            missing_user_attr[missing_user_attr_index, start_ind:stop_ind] = np.tile(padding_attr_vector,
+                                                                                     (len(missing_user_attr_index), 1))
             existing_user_attr_index_dict['existing_index_list'].append(existing_user_attr_index)
         np.save(missing_user_attr_filepath, missing_user_attr)
         np.save(existing_user_attr_index_filepath, existing_user_attr_index_dict)
+
+    def gene_item_attrs(self, raw_filename="movies.dat", complete_item_attr_filename="complete_item_attr.npy",
+                        existing_item_attr_index_filename="existing_item_attr_index.npy",
+                        missing_item_attr_filename="missing_item_attr.npy", del_percent=0.9
+                        ):
+        raw_filepath = self._raw_folder + "/" + raw_filename
+        complete_item_attr_filepath = self._save_folder + "/" + complete_item_attr_filename
+        existing_item_attr_index_filepath = self._save_folder + "/" + existing_item_attr_index_filename
+        missing_item_attr_filepath = self._save_folder + "/" + missing_item_attr_filename
+
+        genres_dict = {}
+        with open(raw_filepath, 'r', encoding='utf-8', errors='ignore') as fr:
+            for line in fr:
+                line = line.strip()
+                items_list = line.split('::')
+                assert items_list[-1].strip().__len__() > 0
+                temp = items_list[-1].strip().split('|')
+                for t in temp:
+                    t = t.strip()
+                    assert len(t) > 0
+                    if t not in genres_dict:
+                        genres_dict[t] = len(genres_dict)
+        print(genres_dict)
+
+        # 生成完整item属性
+        genres_len = len(genres_dict)
+        complete_item_attr = np.zeros((self.item_count, genres_len), dtype=np.float64)
+        with open(raw_filepath, 'r', encoding='utf-8', errors='ignore') as fr:
+            for line in fr:
+                items_list = line.split('::')
+                iid = int(items_list[0].strip()) - 1
+                temp = items_list[-1].strip().split('|')
+                for t in temp:
+                    t = t.strip()
+                    complete_item_attr[iid][genres_dict[t]] = 1
+        # print(complete_item_attr[0:2,:])
+        np.save(complete_item_attr_filepath, complete_item_attr)
+
+        # 随机删除90%用户的属性，并以均值填充
+        missing_item_attr = complete_item_attr.copy()
+        itemset = set(range(self.item_count))
+
+        len_list = [genres_len]
+        existing_item_attr_index_dict = dict()
+        existing_item_attr_index_dict['attr_dim_list'] = len_list
+        existing_item_attr_index_dict['existing_index_list'] = list()
+        for i in range(len_list.__len__()):
+            # 针对不同属性，采取不同随机删除处理
+            start_ind = sum(len_list[0:i])
+            stop_ind = sum(len_list[0:i + 1])
+            existing_item_attr_index = random.sample(itemset, int(self.item_count * (1 - del_percent)))
+            missing_item_attr_index = list(itemset - set(existing_item_attr_index))
+            padding_attr_vector = np.mean(complete_item_attr[existing_item_attr_index, start_ind:stop_ind], axis=0)
+            missing_item_attr[missing_item_attr_index, start_ind:stop_ind] = np.tile(padding_attr_vector,
+                                                                                     (len(missing_item_attr_index), 1))
+            existing_item_attr_index_dict['existing_index_list'].append(existing_item_attr_index)
+        print(missing_item_attr[0:2])
+        np.save(missing_item_attr_filepath, missing_item_attr)
+        np.save(existing_item_attr_index_filepath, existing_item_attr_index_dict)
 
 
 if __name__ == '__main__':
@@ -192,6 +252,7 @@ if __name__ == '__main__':
     gene.gene_train_val_test_data()
     # gene.gene_graph_index_value()
     gene.gene_user_attrs()
+    gene.gene_item_attrs()
     # data = np.load('./handled/existing_user_attr_index.npy', allow_pickle=True).tolist()
     # data2 = np.load('./handled/missing_user_attr.npy', allow_pickle=True).tolist()
     # print(data['attr_dim_list'])
